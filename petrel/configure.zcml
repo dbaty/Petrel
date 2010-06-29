@@ -1,0 +1,58 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+  <include package="repoze.bfg.includes" />
+
+  <static name="petrel" path="static"/>
+
+  <!-- FIXME: debug only -->
+  <view name="_debug"
+        view=".content.site.debug"/>
+
+  <!-- Site and Folder -->
+  <view context=".interfaces.IFolderish"
+        view=".content.folder.folder_view"
+        renderer="templates/folder.pt"/>
+  <view context=".interfaces.IFolderish"
+        name="folder_action_handler"
+        view=".content.folder.folder_action_handler"/>
+  <view context=".interfaces.IFolderish"
+        name="folder_add_form"
+        view=".content.folder.folder_add_form"
+        renderer="templates/content_edit.pt"/>
+  <view context=".interfaces.IFolderish"
+        name="addFolder"
+        view=".content.folder.folder_add"/>
+
+  <!-- Document -->
+  <view context=".interfaces.IFolderish"
+        name="document_add_form"
+        view=".content.document.document_add_form"
+        renderer="templates/content_edit.pt"/>
+  <view context=".interfaces.IFolderish"
+        name="addDocument"
+        view=".content.document.document_add"/>
+  <view context=".content.document.Document"
+        view=".content.document.document_view"
+        renderer="templates/document.pt"/>
+  <view context=".content.document.Document"
+        name="edit_form"
+        view=".content.document.document_edit_form"
+        renderer="templates/content_edit.pt"/>
+  <view context=".content.document.Document"
+        name="editDocument"
+        view=".content.document.document_edit"
+        renderer="templates/content_edit.pt"/>
+
+  <!-- Search -->
+  <subscriber for="repoze.folder.interfaces.IObjectAddedEvent"
+              handler=".catalog.index"/>
+  <subscriber for=".interfaces.IObjectModifiedEvent"
+              handler=".catalog.reindex"/>
+  <subscriber for="repoze.folder.interfaces.IObjectWillBeRemovedEvent"
+              handler=".catalog.unindex"/>
+  <view name="search_form"
+        view=".content.site.search_form"
+        renderer="templates/search_form.pt"/>
+  <view name="search"
+        view=".content.site.search"
+        renderer="templates/search_form.pt"/>
+</configure>

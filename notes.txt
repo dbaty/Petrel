@@ -1,0 +1,77 @@
+Todo
+====
+
+- find a simpler way to register content types. It would register the
+  view page, and the add and edit forms;
+
+- add a search input somewehere;
+
+- implement navigation tree;
+
+- find a better place for the "actions" menu: move it above the bottom
+  border of the title?
+
+- refine CSS;
+
+- order items in folder;
+
+- add tests.
+
+
+Base
+====
+
+- ZODB
+
+- content types:
+
+  - base schema : id (automatically generated but editable), required title,
+    optional description
+
+  - folder: base schema
+
+  - document: base schema + optional content. Content may be edited
+    with a WYSIWYG editor, reStructuredText or plain text
+
+  - file
+
+  - image (only needed if we want to do gallery-like templates for
+    folders where we would need to generate thumbnails)
+
+- folder:
+
+  - ability to select a default document
+
+  - otherwise we use a folder listing template
+
+- document: required title, optional description, optional content
+
+- search engine: repoze.catalog
+
+- when logged-in, actions are displayed in an overlay so that it does
+  not impact the design of the web site. Use a different template for
+  authoring (defined in Petrel) and viewing content (defined in the
+  site application itself).
+
+
+Pluggability
+============
+
+- register new content types
+
+- override CSS
+
+- change CSS and templates
+
+
+
+More
+====
+
+- i18n
+
+
+Credits
+=======
+
+Breadcrumbs: Veerle Pieters (http://veerle-v2.duoh.com/blog/about/)

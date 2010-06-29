@@ -1,0 +1,49 @@
+<metal:layout metal:use-macro="api.layout">
+<metal:content metal:fill-slot="content"
+               tal:define="items context.values()">
+
+<h1 tal:content="context.title"></h1>
+
+<p tal:condition="context.description"
+   tal:content="context.description"
+   style="font-style: italic"/>
+
+<p tal:condition="not items">
+  <em>This folder is empty.</em>
+</p>
+
+<form tal:attributes="action '%s/folder_action_handler' % context_url"
+      tal:condition="items"
+      method="POST">
+  <table class="listing">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" onclick="javascript: toggleAll(this)"
+                 title="select/unselect all"/></th>
+        <th>Type</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="item items"
+          tal:attributes="class repeat['item'].odd() and 'odd'">
+        <td class="centered">
+          <input type="checkbox" name="selected"
+                 tal:attributes="value item.__name__"/>
+        </td>
+        <td class="centered"><!-- FIXME: show icon --></td>
+        <td>
+          <a tal:attributes="href '%s/%s' % (context_url, item.__name__)"
+             tal:content="item.title"/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <ol id="folderActions">
+    <li><input type="submit" name="action" value="delete"/></li>
+  </ol>
+</form>
+
+</metal:content>
+</metal:layout>

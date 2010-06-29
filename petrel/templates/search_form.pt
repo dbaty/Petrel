@@ -1,0 +1,43 @@
+<metal:layout metal:use-macro="api.layout">
+<metal:content metal:fill-slot="content"
+               tal:define="items context.values()">
+
+<h1>Search</h1>
+
+<form tal:attributes="action api.urlOf('search')"
+      method="POST">
+  <input type="text" name="text"
+         tal:attributes="value api.request.POST.get('text', '')"/>
+  <input type="submit" value="Search"/>
+</form>
+
+<tal:if tal:condition="results is not None">
+  <p tal:condition="not results">
+    <em>No matching items have been found.</em>
+  </p>
+  <p tal:condition="results">
+    <em><span tal:replace="len(results)"/> matching items have been found.</em>
+  </p>
+  <table tal:condition="results"
+         class="listing">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="item results"
+          tal:attributes="class repeat['item'].odd() and 'odd'">
+        <td class="centered"><!-- FIXME: show icon --></td>
+        <td>
+          <a tal:attributes="href '%s%s' % (context_url, item['path'])"
+             tal:content="item['title']"/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tal:if>
+
+</metal:content>
+</metal:layout>
