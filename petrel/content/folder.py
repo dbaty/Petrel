@@ -10,20 +10,33 @@ from repoze.folder import Folder as BaseFolder
 from repoze.folder.events import ObjectAddedEvent
 from repoze.folder.events import ObjectWillBeRemovedEvent
 
-from wtforms.fields import TextField
-from wtforms.validators import required
-
 from zope.interface import implements
 
 from petrel.content.base import BaseContent
-from petrel.content.base import BaseForm
+from petrel.content.base import BaseContentAddForm
+from petrel.content.base import BaseContentEditForm
+from petrel.content.registry import get_content_type_registry
 from petrel.interfaces import IFolderish
-from petrel.views import get_default_view_bindings
 from petrel.views import redirect_to
+
+
+class FolderAddForm(BaseContentAddForm, ):
+    pass
+
+
+class FolderEditForm(BaseContentEditForm, FolderAddForm):
+    pass
 
 
 class Folder(BaseFolder, BaseContent):
     implements(IFolderish)
+
+    meta_type = 'Folder'
+    label = 'Folder'
+    icon = 'static/img/folder.gif'
+
+    add_form = FolderAddForm
+    edit_form = FolderEditForm
 
     def __init__(self, *args, **kwargs):
         BaseContent.__init__(self)
@@ -46,44 +59,15 @@ class Folder(BaseFolder, BaseContent):
         return res
 
     def get_addable_types(self):
-        ## FIXME: make this configurable
-        return ('folder', 'document')
+        ct_registry = get_content_type_registry()
+        return [(ct['label'], '%s_add_form' % meta_type.lower()) \
+                    for meta_type, ct in ct_registry.items()]
 
-
-class FolderEditForm(BaseForm):
-    ## FIXME: check that id is not already taken
-    id = TextField(label=u'Id',
-                   description=u'Should be short, will be part of the URL.',
-                   validators=[required()])
-    title = TextField(label=u'Title', validators=[required()])
-
-
-def folder_view(request):
-    return get_default_view_bindings(request)
-
-
-def folder_add_form(request, form=None):
-    bindings = get_default_view_bindings(request)
-    if form is None:
-        form = FolderEditForm()
-    bindings.update(action='addFolder',
-                    content_type='folder',
-                    add_mode=True,
-                    form=form)
-    return bindings
-
-
-def folder_add(request):
-    form = FolderEditForm(request.POST)
-    if not form.validate():
-        return folder_add_form(request, form)
-
-    folder = Folder()
-    folder.edit(title=form.title.data)
-    request.context.add(form.id.data, folder)
-    msg = (u'Folder "%s" has been created and you are '
-           'now viewing it.' % form.title.data)
-    return redirect_to(folder.get_url(request), status_message=msg)
+    def validate_id(self, obj_id):
+        """Validate that ``obj_id`` is a valid id in this folderish
+        item.
+        """
+        return obj_id not in self
 
 
 def folder_action_handler(request):

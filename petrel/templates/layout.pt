@@ -6,16 +6,23 @@
     <metal:title metal:define-slot="title"></metal:title>
   </title>
   <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
-  <!-- FIXME: URL should be calculated. Cf. repoze.bfg.url.static_url() -->
-  <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon"/><!-- FIXME -->
-  <link rel="stylesheet" type="text/css" href="/petrel/css/main.css"/>
-  <script type="text/javascript" src="/petrel/js/utils.js"></script>
+  <link rel="icon" type="image/x-icon"
+        tal:condition="None and 'FIXME'"
+        tal:attributes="href api.static_url('static/img/favicon.ico')" />
+  <link rel="stylesheet" type="text/css"
+        tal:attributes="href api.static_url('static/css/main.css')"/>
+  <script type="text/javascript"
+          tal:attributes="src api.static_url('static/js/jquery-1.4.2.min.js')">
+  </script>
+  <script type="text/javascript"
+          tal:attributes="src api.static_url('static/js/utils.js')"></script>
   <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->
 </head>
 <body>
 
   <div id="header">
-    <a href="FIXME">Site title</a>
+    <a tal:attributes="href api.site.get_url(request)"
+       tal:content="api.site.title"/>
   </div>
 
   <ol id="breadcrumbs"
@@ -49,8 +56,8 @@
         <a href="#" onclick="return false;">Add content&hellip;</a>
         <ol class="dropdown">
           <li tal:repeat="type addable_types">
-            <a tal:attributes="href '%s/%s_add_form' % (context_url, type)"
-               tal:content="type"/>
+            <a tal:attributes="href '%s/%s' % (context_url, type[1])"
+               tal:content="type[0]"/>
           </li>
         </ol>
       </li>

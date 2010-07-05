@@ -15,7 +15,7 @@
                            class 'required' in field.flags and 'required'">
       <span tal:replace="field.label.text"/>
       <img tal:condition="'required' in field.flags" 
-           tal:attributes="src api.urlOf('static/img/required.png')"
+           tal:attributes="src api.static_url('static/img/required.png')"
            width="4" height="4" alt="(required)"/>
     </label>
     <div tal:condition="field.description" tal:content="field.description"

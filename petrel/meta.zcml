@@ -1,0 +1,8 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:meta="http://namespaces.zope.org/meta">
+  <meta:directives namespace="http://namespaces.repoze.org/bfg">
+    <meta:directive name="content_type"
+                    schema="petrel.zcml.IContentTypeDirective"
+                    handler="petrel.zcml._register_content_type"/>
+  </meta:directives>
+</configure>

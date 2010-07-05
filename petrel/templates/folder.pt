@@ -32,7 +32,11 @@
           <input type="checkbox" name="selected"
                  tal:attributes="value item.__name__"/>
         </td>
-        <td class="centered"><!-- FIXME: show icon --></td>
+        <td class="centered">
+          <img tal:attributes="src api.static_url(item.icon);
+                               alt context.label"
+               width="16" height="16"/>
+        </td>
         <td>
           <a tal:attributes="href '%s/%s' % (context_url, item.__name__)"
              tal:content="item.title"/>

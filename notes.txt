@@ -1,10 +1,9 @@
 Todo
 ====
 
-- find a simpler way to register content types. It would register the
-  view page, and the add and edit forms;
+- add a form to rename items (from folder) + reindex children
 
-- add a search input somewehere;
+- add a search form field somewehere;
 
 - implement navigation tree;
 
@@ -15,43 +14,13 @@ Todo
 
 - order items in folder;
 
+- WYSIWYG editor for document;
+
+- add 'file' content type;
+
 - add tests.
 
-
-Base
-====
-
-- ZODB
-
-- content types:
-
-  - base schema : id (automatically generated but editable), required title,
-    optional description
-
-  - folder: base schema
-
-  - document: base schema + optional content. Content may be edited
-    with a WYSIWYG editor, reStructuredText or plain text
-
-  - file
-
-  - image (only needed if we want to do gallery-like templates for
-    folders where we would need to generate thumbnails)
-
-- folder:
-
-  - ability to select a default document
-
-  - otherwise we use a folder listing template
-
-- document: required title, optional description, optional content
-
-- search engine: repoze.catalog
-
-- when logged-in, actions are displayed in an overlay so that it does
-  not impact the design of the web site. Use a different template for
-  authoring (defined in Petrel) and viewing content (defined in the
-  site application itself).
+- ability to select a default document in a folder
 
 
 Pluggability
@@ -61,8 +30,9 @@ Pluggability
 
 - override CSS
 
-- change CSS and templates
+- change CSS and templates: see 'renderer' directive (file:///Users/damien/data/docs/bfg/narr/views.html#adding-and-overriding-renderers) and file:///Users/damien/data/docs/bfg/narr/extending.html#extending-chapter and file:///Users/damien/data/docs/bfg/narr/resources.html#overriding-resources-section and 'repoze.bfg.skins' package
 
+- see 'repoze.bfg.viewgroup' package
 
 
 More
@@ -75,3 +45,5 @@ Credits
 =======
 
 Breadcrumbs: Veerle Pieters (http://veerle-v2.duoh.com/blog/about/)
+
+Icons of content types: Plone

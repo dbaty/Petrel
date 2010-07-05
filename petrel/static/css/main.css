@@ -144,7 +144,7 @@ a:hover {
 #breadcrumbs li {
     display: inline;
     padding: 0.5em;
-    background: url('/petrel/img/breadcrumbs-bg.gif')  no-repeat right center; /* FIXME: make this a PNG file */
+    background: url('../img/breadcrumbs-bg.gif') no-repeat right center; /* FIXME: make this a PNG file */
 }
 
 #breadcrumbs li.currentInBreadcrumbs {

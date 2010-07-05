@@ -1,20 +1,11 @@
 import unittest
 
-from repoze.bfg.configuration import Configurator
-
-from repoze.catalog.catalog import Catalog
-from repoze.catalog.document import DocumentMap
-
-from petrel.catalog import get_catalog
-from petrel.catalog import get_catalog_document_map
-from petrel.content.document import Document
-from petrel.content.folder import Folder
-from petrel.content.site import Site
-
 
 class TestCatalog(unittest.TestCase):
 
     def setUp(self):
+        from repoze.bfg.configuration import Configurator
+        from petrel.content.site import Site
         self.config = Configurator()
         self.config.begin()
         self.config.load_zcml('petrel:configure.zcml')
@@ -24,6 +15,7 @@ class TestCatalog(unittest.TestCase):
         self.config.end()
 
     def _makeDoc(self, parent=None):
+        from petrel.content.document import Document
         doc = Document()
         doc.title = u'Foo'
         doc.description = u'bar'
@@ -34,6 +26,7 @@ class TestCatalog(unittest.TestCase):
         return doc
 
     def _makeFolder(self, parent=None):
+        from petrel.content.folder import Folder
         folder = Folder()
         folder.title = u'Folder'
         if parent is None:
@@ -45,10 +38,14 @@ class TestCatalog(unittest.TestCase):
         return self.site._catalog.search(**criteria)
 
     def test_get_catalog(self):
+        from repoze.catalog.catalog import Catalog
+        from petrel.catalog import get_catalog
         doc_map = get_catalog(self.site)
         self.assert_(doc_map, Catalog)
 
     def test_get_catalog_doc_map(self):
+        from repoze.catalog.document import DocumentMap
+        from petrel.catalog import get_catalog_document_map
         doc_map = get_catalog_document_map(self.site)
         self.assert_(doc_map, DocumentMap)
 

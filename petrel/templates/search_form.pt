@@ -29,7 +29,11 @@
     <tbody>
       <tr tal:repeat="item results"
           tal:attributes="class repeat['item'].odd() and 'odd'">
-        <td class="centered"><!-- FIXME: show icon --></td>
+        <td class="centered">
+          <img tal:attributes="src api.static_url(item.icon);
+                               alt item.label"
+               width="16" height="16"/>
+        </td>
         <td>
           <a tal:attributes="href '%s%s' % (context_url, item['path'])"
              tal:content="item['title']"/>
