@@ -1,5 +1,6 @@
 import unittest
 
+
 def _convert_nav_tree(tree):
     converted = []
     for i in tree:
@@ -10,7 +11,7 @@ def _convert_nav_tree(tree):
 class TestUtils(unittest.TestCase):
 
     def setUp(self):
-        from repoze.bfg.configuration import Configurator
+        from pyramid.configuration import Configurator
         from petrel.content.site import Site
         self.config = Configurator()
         self.config.begin()
@@ -20,7 +21,7 @@ class TestUtils(unittest.TestCase):
     def tearDown(self):
         self.config.end()
 
-    def _makeFolder(self, folder_id, parent=None):
+    def _make_folder(self, folder_id, parent=None):
         from petrel.content.folder import Folder
         folder = Folder()
         folder.title = folder_id
@@ -29,7 +30,7 @@ class TestUtils(unittest.TestCase):
         parent.add(folder_id, folder)
         return folder
 
-    def _makeDoc(self, doc_id, parent=None):
+    def _make_doc(self, doc_id, parent=None):
         from petrel.content.document import Document
         doc = Document()
         doc.title = doc_id
@@ -38,7 +39,7 @@ class TestUtils(unittest.TestCase):
         parent.add(doc_id, doc)
         return doc
 
-    def _makePath(self, path):
+    def _make_path(self, path):
         ids = path.split('/')
         parent = self.site
         for obj_id in ids[:-1]:
@@ -47,14 +48,14 @@ class TestUtils(unittest.TestCase):
             parent = parent[obj_id]
         self._makeDoc(ids[-1], parent)
 
-    def assertTreesEqual(self, expected, got):
+    def assert_trees_equal(self, expected, got):
         return self.assertEqual(expected, _convert_nav_tree(got))
-
 
     def test_convert_nav_tree(self):
         ## Test our own test function
         class Dummy:
-            def __init__(self, title): self.title = title
+            def __init__(self, title):
+                self.title = title
 
         self.assertEqual([], _convert_nav_tree([]))
         tree = [(Dummy('foo'), []),
@@ -63,12 +64,10 @@ class TestUtils(unittest.TestCase):
         expected = [('foo', []), ('bar', [('baz', []), ('quuz', [])])]
         self.assertEqual(expected, _convert_nav_tree(tree))
 
-
     ## FIXME: reactivate later
     def _test_get_nav_tree_empty_site(self):
         from petrel.utils import get_nav_tree
         self.assertEqual(get_nav_tree(self.site), [])
-
 
     ## FIXME: reactivate later
     def _test_get_nav_tree_only_root_folders(self):
@@ -83,7 +82,6 @@ class TestUtils(unittest.TestCase):
         self.assertTreesEqual(get_nav_tree(self.site), expected)
         self.assertTreesEqual(get_nav_tree(folder1), expected)
         self.assertTreesEqual(get_nav_tree(folder2), expected)
-
 
     ## FIXME: reactivate later
     def _test_get_nav_tree_deep_document(self):

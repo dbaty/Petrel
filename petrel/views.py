@@ -4,6 +4,7 @@ FIXME: should we rename this module?
 
 $Id$
 """
+
 from urllib import quote_plus
 
 from webob.exc import HTTPFound

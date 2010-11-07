@@ -3,8 +3,8 @@
 $Id$
 """
 
-from repoze.bfg.configuration import Configurator
-from repoze.bfg.threadlocal import get_current_registry
+from pyramid.configuration import Configurator
+from pyramid.threadlocal import get_current_registry
 
 from zope.configuration.fields import GlobalObject
 

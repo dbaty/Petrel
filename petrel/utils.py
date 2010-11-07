@@ -1,7 +1,6 @@
-from repoze.bfg.chameleon_zpt import get_template
-
-from repoze.bfg.url import static_url
-from repoze.bfg.traversal import find_root
+from pyramid.chameleon_zpt import get_template
+from pyramid.url import static_url
+from pyramid.traversal import find_root
 
 
 class TemplateAPI(object):
@@ -23,10 +22,10 @@ class TemplateAPI(object):
         self.show_login_link = True
         if request.url.split('?')[0].endswith('login_form'):
             self.show_login_link = False
-        self.user_cn = getUserMetadata(request).get('cn', None)
+        self.user_cn = get_user_metadata(request).get('cn', None)
 
-    ## FIXME: rename as 'url_of()'. Is it used, actually?
-    def urlOf(self, path):
+    ## FIXME: is it used at all?
+    def url_of(self, path):
         ## FIXME: use repoze.bfg.url.model_url()
         return '/'.join((self.request.application_url, path)).strip('/')
 
@@ -50,15 +49,14 @@ class TemplateAPI(object):
         html += '<li><a href="#">baz</a>'
         html += '<ol>'
         html += '<li><a href="#">sub-baz 1</a></li>'
-        html += '<li><a href="#">sub-baz 2</a></li>'        
+        html += '<li><a href="#">sub-baz 2</a></li>'
         html += '</ol></li>'
         html += '<li><a href="#">quuz</a></li>'
         html += ''
         return html
 
 
-## FIXME: rename as 'get_user_metadata()'
-def getUserMetadata(request):
+def get_user_metadata(request):
     return request.environ.get('repoze.who.identity', {})
 
 

@@ -3,8 +3,8 @@
 $Id$
 """
 
-from repoze.bfg.traversal import find_root
-from repoze.bfg.traversal import model_path
+from pyramid.traversal import find_root
+from pyramid.traversal import model_path
 
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.document import DocumentMap

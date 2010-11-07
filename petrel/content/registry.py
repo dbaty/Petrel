@@ -5,7 +5,7 @@ $Id$
 
 from zope.interface import implements
 
-from repoze.bfg.threadlocal import get_current_registry
+from pyramid.threadlocal import get_current_registry
 
 from petrel.interfaces import IContentTypeRegistry
 

@@ -1,18 +1,17 @@
 Todo
 ====
 
+- pep8-ify
+
 - add a form to rename items (from folder) + reindex children
 
-- add a search form field somewehere;
+- add a footer with a link to the search form and the site map (?)
 
 - implement navigation tree;
 
-- find a better place for the "actions" menu: move it above the bottom
-  border of the title?
-
 - refine CSS;
 
-- order items in folder;
+- order items in folder (see recent changes in repoze.folder);
 
 - WYSIWYG editor for document;
 
@@ -21,6 +20,10 @@ Todo
 - add tests.
 
 - ability to select a default document in a folder
+
+- add a 'cancel' button on add/edit forms.
+
+- use the catalog to list items in the folder view page (?)
 
 
 Pluggability

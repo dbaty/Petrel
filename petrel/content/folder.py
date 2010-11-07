@@ -4,7 +4,7 @@ views, etc.
 $Id$
 """
 
-from repoze.bfg.threadlocal import get_current_registry
+from pyramid.threadlocal import get_current_registry
 
 from repoze.folder import Folder as BaseFolder
 from repoze.folder.events import ObjectAddedEvent

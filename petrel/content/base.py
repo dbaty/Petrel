@@ -1,8 +1,8 @@
 from persistent import Persistent
 
-from repoze.bfg.location import lineage
-from repoze.bfg.threadlocal import get_current_registry
-from repoze.bfg.url import model_url
+from pyramid.location import lineage
+from pyramid.threadlocal import get_current_registry
+from pyramid.url import model_url
 
 from wtforms.fields import TextField
 from wtforms.form import Form

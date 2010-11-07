@@ -7,7 +7,7 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'repoze.bfg',
+    'pyramid',
     'repoze.catalog',
     'repoze.folder',
     'repoze.tm',
@@ -21,6 +21,7 @@ setup(name='Petrel',
       description='Petrel',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
+        ## FIXME
         "Programming Language :: Python",
         "Framework :: BFG",
         "Topic :: Internet :: WWW/HTTP",
@@ -29,7 +30,7 @@ setup(name='Petrel',
       author='',
       author_email='',
       url='',
-      keywords='web wsgi bfg',
+      keywords='web wsgi lightweight cms',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,

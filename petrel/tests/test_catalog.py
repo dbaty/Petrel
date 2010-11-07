@@ -4,7 +4,7 @@ import unittest
 class TestCatalog(unittest.TestCase):
 
     def setUp(self):
-        from repoze.bfg.configuration import Configurator
+        from pyramid.configuration import Configurator
         from petrel.content.site import Site
         self.config = Configurator()
         self.config.begin()
