@@ -34,5 +34,4 @@
               handler=".catalog.reindex"/>
   <subscriber for="repoze.folder.interfaces.IObjectWillBeRemovedEvent"
               handler=".catalog.unindex"/>
-
 </configure>

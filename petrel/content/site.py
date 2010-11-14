@@ -1,5 +1,4 @@
-"""Define the ``Site`` class and everything related to it (forms,
-views, etc.) as well as the "application maker".
+"""Define the ``Site`` class as well as the "application maker".
 
 $Id$
 """
@@ -15,8 +14,6 @@ from petrel.views import get_default_view_bindings
 
 
 def appmaker(zodb_root):
-    ## FIXME: could we make this configurable so that multiple sites
-    ## may live in the same ZODB?
     if not 'app_root' in zodb_root:
         app_root = Site()
         zodb_root['app_root'] = app_root
@@ -50,10 +47,10 @@ def search(request):
     text = request.POST.get('text', '')
     results = catalog.search(searchable_text=text,
                              sort_index='searchable_text')
-    results = results[1] ## results[0] is the number of results
+    n_results, results = results
     doc_map = get_catalog_document_map(request.context)
     results = [doc_map.get_metadata(doc_id) for doc_id in results]
-    bindings.update(results=results)
+    bindings.update(n_results=n_results, results=results)
     return bindings
 
 

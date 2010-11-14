@@ -28,7 +28,7 @@
 
   <div class="buttons">
     <button type="submit" class="positive">
-      <img tal:attributes="src api.urlOf('static/img/tick.png')" alt=""/>
+      <img tal:attributes="src api.url_of('static/img/tick.png')" alt=""/>
       <span tal:replace="('Add %s' % content_type) if add_mode else 'Save'"/>
     </button>
   </div>

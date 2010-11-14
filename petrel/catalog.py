@@ -42,7 +42,7 @@ def get_all_contained_items_and_itself(self):
     if getattr(self, 'values', None):
         for item in self.values():
             get_all_contained_items_and_itself(item)
-            yield item
+            yield item ## FIXME: really needed?
     yield self
 
 class CatalogAware:
@@ -59,19 +59,24 @@ class CatalogAware:
 
     def index(self):
         """Index object in the catalog."""
-        doc_map = get_catalog_document_map(self)
-        doc_id = doc_map.add(model_path(self))
-        doc_map.add_metadata(doc_id, self._get_catalog_metadata())
-        catalog = get_catalog(self)
-        catalog.index_doc(doc_id, self)
+        for item in get_all_contained_items_and_itself(self):
+            doc_map = get_catalog_document_map(item)
+            doc_id = doc_map.add(model_path(item))
+            doc_map.add_metadata(doc_id, item._get_catalog_metadata())
+            catalog = get_catalog(item)
+            catalog.index_doc(doc_id, item)
 
     def reindex(self):
         """Reindex object in the catalog."""
-        doc_map = get_catalog_document_map(self)
-        doc_id = doc_map.docid_for_address(model_path(self))
-        doc_map.add_metadata(doc_id, self._get_catalog_metadata())
-        catalog = get_catalog(self)
-        catalog.reindex_doc(doc_id, self)
+        ## FIXME: would be nice to be able to reindex only specific
+        ## indexes. This would need to be implemented in
+        ## 'repoze.catalog' first.
+        for item in get_all_contained_items_and_itself(self):
+            doc_map = get_catalog_document_map(item)
+            doc_id = doc_map.docid_for_address(model_path(item))
+            doc_map.add_metadata(doc_id, item._get_catalog_metadata())
+            catalog = get_catalog(item)
+            catalog.reindex_doc(doc_id, item)
 
     def unindex(self):
         """Remove references to this object from the catalog and

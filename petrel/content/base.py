@@ -120,7 +120,7 @@ def content_add_form(content_type, request, form=None):
 def content_add(content_type, request):
     context = request.context
     form = content_type._get_add_form(request.POST)
-    form.errors['id'] = [u'INvalid id']
+    form.errors['id'] = [u'Invalid id']
     if not form.validate(context):
         ct_registry = get_content_type_registry()
         add_form_view = ct_registry[content_type.meta_type]['add_form_view']

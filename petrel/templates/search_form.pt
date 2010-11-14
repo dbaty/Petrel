@@ -12,11 +12,11 @@
 </form>
 
 <tal:if tal:condition="results is not None">
-  <p tal:condition="not results">
+  <p tal:condition="not n_results">
     <em>No matching items have been found.</em>
   </p>
-  <p tal:condition="results">
-    <em><span tal:replace="len(results)"/> matching items have been found.</em>
+  <p tal:condition="n_results">
+    <em><span tal:replace="n_results"/> matching items have been found.</em>
   </p>
   <table tal:condition="results"
          class="listing">

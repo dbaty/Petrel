@@ -1,15 +1,13 @@
 Todo
 ====
 
-- pep8-ify
-
 - add a form to rename items (from folder) + reindex children
 
-- add a footer with a link to the search form and the site map (?)
-
-- implement navigation tree;
+- add a footer with a link to the search form and the site map
 
 - refine CSS;
+
+- implement navigation tree;
 
 - order items in folder (see recent changes in repoze.folder);
 

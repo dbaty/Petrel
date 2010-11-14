@@ -7,6 +7,7 @@ $Id$
 from pyramid.threadlocal import get_current_registry
 
 from repoze.folder import Folder as BaseFolder
+from repoze.folder import unicodify
 from repoze.folder.events import ObjectAddedEvent
 from repoze.folder.events import ObjectWillBeRemovedEvent
 
@@ -17,6 +18,7 @@ from petrel.content.base import BaseContentAddForm
 from petrel.content.base import BaseContentEditForm
 from petrel.content.registry import get_content_type_registry
 from petrel.interfaces import IFolderish
+from petrel.views import get_default_view_bindings
 from petrel.views import redirect_to
 
 
@@ -58,6 +60,18 @@ class Folder(BaseFolder, BaseContent):
         res = BaseFolder.remove(self, name, send_events=False)
         return res
 
+    def rename(self, names):
+        for old_name, new_name in names:
+            old_name = unicodify(old_name)
+            new_name = unicodify(new_name)
+            if new_name in self:
+                raise ValueError(
+                    u'An item of the same name ("%s") already '
+                    'exists.' % new_name)
+            obj = self.remove(old_name)
+            self.add(new_name, obj)
+        return True
+
     def get_addable_types(self):
         ct_registry = get_content_type_registry()
         return [(ct['label'], '%s_add_form' % meta_type.lower()) \
@@ -86,3 +100,26 @@ def folder_delete(request):
         folder.remove(name)
     msg = u'Item(s) have been deleted.'
     return redirect_to(folder.get_url(request), status_message=msg)
+
+
+def folder_rename_form(request):
+    bindings = get_default_view_bindings(request)
+    name = request.POST['selected'][0]
+    bindings = bindings.update(name=name)
+    return bindings
+
+
+def folder_rename(request):
+    context = request.context
+    ## FIXME: check that 'name_orig' is valid
+    ## FIXME: check that 'name_new' is valid
+    names = []
+    for i in range(len(request.POST.getall('name_orig'))):
+        names.append((request.POST.getall('name_orig')[i],
+                      request.POST.getall('name_new')[i]))
+    try:
+        context.rename(names)
+    except ValueError:
+        raise ## FIXME: show error message.
+    msg = u'Item(s) have been renamed.'
+    return redirect_to(context.get_url(request), status_message=msg)
