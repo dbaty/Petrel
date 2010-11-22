@@ -13,7 +13,7 @@ $Id$
 
 class AuthoringModeMiddleware(object):
 
-    def __init__(self, app, prefix='/authoring',
+    def __init__(self, app, prefix='authoring',
                  environ_key='authoring_mode'):
         """If ``PATH_INFO`` starts with the given prefix, add a key in
         the environment, remove the prefix from ``PATH_INFO`` and pass
@@ -24,9 +24,9 @@ class AuthoringModeMiddleware(object):
         self.environ_key = environ_key
 
     def __call__(self, environ, start_response):
-        if environ['PATH_INFO'].startswith(self.prefix + '/'):
-            environ[self.environ_key] = True
-            environ['PATH_INFO'] = environ['PATH_INFO'][len(self.prefix):]
+        if environ['PATH_INFO'].startswith('/%s/' % self.prefix):
+            environ[self.environ_key] = self.prefix
+            environ['PATH_INFO'] = environ['PATH_INFO'][1 + len(self.prefix):]
         return self.app(environ, start_response)
 
 

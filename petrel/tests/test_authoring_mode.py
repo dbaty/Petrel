@@ -25,21 +25,26 @@ class TestAuthoringMode(TestCase):
         environ = {'PATH_INFO': '/authoring/foo/bar'}
         got = self._call_fut(environ)
         self.assertEqual(got['PATH_INFO'], '/foo/bar')
-        self.assertEqual(got['authoring_mode'], True)
+        self.assertEqual(got['authoring_mode'], 'authoring')
 
     def test_middleware_not_in_authoring_mode(self):
         environ = {'PATH_INFO': '/foo/bar'}
-        got = self._call_fut(environ)
+        got = self._call_fut(environ.copy())
         self.assertEqual(got, environ)
 
     def test_custom_environ_key(self):
         environ = {'PATH_INFO': '/authoring/foo/bar'}
         got = self._call_fut(environ, environ_key='management_mode')
         self.assertEqual(got['PATH_INFO'], '/foo/bar')
-        self.assertEqual(got['management_mode'], True)
+        self.assertEqual(got['management_mode'], 'authoring')
 
     def test_custom_prefix(self):
         environ = {'PATH_INFO': '/manage/foo/bar'}
-        got = self._call_fut(environ, prefix='/manage')
+        got = self._call_fut(environ, prefix='manage')
         self.assertEqual(got['PATH_INFO'], '/foo/bar')
-        self.assertEqual(got['authoring_mode'], True)
+        self.assertEqual(got['authoring_mode'], 'manage')
+
+    def test_path_starts_with_prefix_but_not_prefix(self):
+        environ = {'PATH_INFO': '/authoring-foo/bar'}
+        got = self._call_fut(environ.copy())
+        self.assertEqual(got, environ)
