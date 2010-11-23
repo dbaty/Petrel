@@ -56,7 +56,7 @@ def search(request):
 
 def debug(request): ## FIXME: debug only
     context = request.context
-    from repoze.bfg.traversal import find_root
+    from pyramid.traversal import find_root
     site = find_root(context)
     import pdb; pdb.set_trace()
     site

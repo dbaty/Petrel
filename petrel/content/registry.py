@@ -15,9 +15,9 @@ class ContentTypeRegistry(dict):
 
 
 def get_content_type_registry():
-    bfg_registry = get_current_registry()
-    reg = bfg_registry.queryUtility(IContentTypeRegistry, default=None)
+    pyramid_registry = get_current_registry()
+    reg = pyramid_registry.queryUtility(IContentTypeRegistry, default=None)
     if reg is None:
         reg = ContentTypeRegistry()
-        bfg_registry.registerUtility(reg, IContentTypeRegistry)
+        pyramid_registry.registerUtility(reg, IContentTypeRegistry)
     return reg

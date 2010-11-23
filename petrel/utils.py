@@ -26,7 +26,7 @@ class TemplateAPI(object):
 
     ## FIXME: is it used at all?
     def url_of(self, path):
-        ## FIXME: use repoze.bfg.url.model_url()
+        ## FIXME: use pyramid.url.model_url()
         return '/'.join((self.request.application_url, path)).strip('/')
 
     def static_url(self, path):
