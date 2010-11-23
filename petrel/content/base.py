@@ -46,7 +46,7 @@ class BaseContent(Persistent, CatalogAware):
             registry = get_current_registry()
             registry.notify(ObjectModifiedEvent(self))
 
-    def get_addable_types(self):
+    def get_addable_types(self, *args, **kwargs):
         return ()
 
     def get_url(self, request):
@@ -108,7 +108,7 @@ def content_add_form(content_type, request, form=None):
     bindings = get_default_view_bindings(request)
     if form is None:
         form = content_type._get_add_form()
-    ct_registry = get_content_type_registry()
+    ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type.meta_type]['label']
     bindings.update(action='add%s' % content_type.meta_type,
                     load_jquery=True,
@@ -124,13 +124,13 @@ def content_add(content_type, request):
     form = content_type._get_add_form(request.POST)
     form.errors['id'] = [u'Invalid id']
     if not form.validate(context):
-        ct_registry = get_content_type_registry()
+        ct_registry = get_content_type_registry(request.registry)
         add_form_view = ct_registry[content_type.meta_type]['add_form_view']
         return add_form_view(request, form)
     item = content_type()
     form.populate_obj(item)
     context.add(form.id.data, item)
-    ct_registry = get_content_type_registry()
+    ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type.meta_type]['label']
     msg = (u'%s "%s" has been created and you are '
            'now viewing it.' % (label, form.title.data))
@@ -143,7 +143,7 @@ def content_edit_form(request, form=None):
     bindings = get_default_view_bindings(request)
     if form is None:
         form = context._get_edit_form()
-    ct_registry = get_content_type_registry()
+    ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type.meta_type]['label']
     bindings.update(action='edit',
                     load_jquery=True,
@@ -158,7 +158,7 @@ def content_edit(request):
     item = request.context
     form = item._get_edit_form(request.POST)
     if not form.validate():
-        ct_registry = get_content_type_registry()
+        ct_registry = get_content_type_registry(request.registry)
         edit_form_view = ct_registry[item.meta_type]['edit_form_view']
         return edit_form_view(request, form)
     form.populate_obj(item)

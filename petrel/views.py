@@ -15,10 +15,11 @@ from petrel.utils import TemplateAPI
 def get_default_view_bindings(request):
     context = request.context
     api = TemplateAPI(request)
+    addable_types = context.get_addable_types(request.registry)
     return dict(api=api,
                 load_jquery=False,
                 load_editor=False,
-                addable_types=context.get_addable_types(),
+                addable_types=addable_types,
                 request=request,
                 context=context,
                 context_url=context.get_url(request))

@@ -14,8 +14,10 @@ class ContentTypeRegistry(dict):
     implements(IContentTypeRegistry)
 
 
-def get_content_type_registry():
-    pyramid_registry = get_current_registry()
+def get_content_type_registry(pyramid_registry=None):
+    """Return Petrel content type registry."""
+    if pyramid_registry is None:
+        pyramid_registry = get_current_registry()
     reg = pyramid_registry.queryUtility(IContentTypeRegistry, default=None)
     if reg is None:
         reg = ContentTypeRegistry()

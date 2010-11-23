@@ -72,8 +72,8 @@ class Folder(BaseFolder, BaseContent):
             self.add(new_name, obj)
         return True
 
-    def get_addable_types(self):
-        ct_registry = get_content_type_registry()
+    def get_addable_types(self, registry):
+        ct_registry = get_content_type_registry(registry)
         return [(ct['label'], '%s_add_form' % meta_type.lower()) \
                     for meta_type, ct in ct_registry.items()]
 
