@@ -16,6 +16,11 @@ requires = [
     'ZODB3',
     ]
 
+test_requires = requires + [
+    'nose',
+    'coverage',
+    ]
+
 setup(name='Petrel',
       version='0.0',
       description='Petrel',
@@ -34,12 +39,14 @@ setup(name='Petrel',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires = requires,
-      tests_require= requires,
+      install_requires=requires,
+      tests_require=requires,
       test_suite="petrel.tests",
-      entry_points = """\
+      entry_points="""\
       [paste.app_factory]
       app = petrel.run:app
+      [paste.filter_app_factory]
+      authoringmode = petrel.authoringmode:make_middleware
       """
       )
 

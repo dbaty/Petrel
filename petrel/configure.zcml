@@ -15,7 +15,16 @@
      display_view_renderer="templates/folder.pt"/>
   <view context=".interfaces.IFolderish"
         name="folder_action_handler"
-        view=".content.folder.folder_action_handler"/>
+        request_param="action=delete"
+        view=".content.folder.folder_delete"/>
+  <view context=".interfaces.IFolderish"
+        name="folder_action_handler"
+        request_param="action=rename"
+        view=".content.folder.folder_rename_form"
+        renderer="templates/folder_rename.pt"/>
+  <view context=".interfaces.IFolderish"
+        name="rename"
+        view=".content.folder.folder_rename"/>
   <content_type
      klass="petrel.content.document.Document"
      display_view_renderer="templates/document.pt"/>

@@ -1,39 +1,54 @@
 Todo
 ====
 
-- add a form to rename items (from folder) + reindex children
-
-- add a footer with a link to the search form and the site map
-
-- refine CSS;
-
 - implement navigation tree;
+
+- imlement site map;
+
+- refine CSS (footer, etc.);
 
 - order items in folder (see recent changes in repoze.folder);
 
-- WYSIWYG editor for document;
-
-- add 'file' content type;
+- add 'file' and 'image' content types;
 
 - add tests.
 
 - ability to select a default document in a folder
 
-- add a 'cancel' button on add/edit forms.
-
 - use the catalog to list items in the folder view page (?)
+
+- add automatic creation and modification date attributes on items
+
+- add a tab to enter metadata in the edit form: keywords, author,
+  etc.
+
+- configure CLEditor:
+
+  - do not show all buttons in the toolbar;
+
+  - make the editor wider;
+
+  - use the CSS of the site.
+
+- implement an error page for 404 errors
 
 
 Pluggability
 ============
 
-- register new content types
+- create an example application that registers new content types, use
+  a different layout/CSS, etc.
 
-- override CSS
+- implement a mechanism that lets us have a different layout/CSS if we
+  are managing content.
 
-- change CSS and templates: see 'renderer' directive (file:///Users/damien/data/docs/bfg/narr/views.html#adding-and-overriding-renderers) and file:///Users/damien/data/docs/bfg/narr/extending.html#extending-chapter and file:///Users/damien/data/docs/bfg/narr/resources.html#overriding-resources-section and 'repoze.bfg.skins' package
+  1. The 'authoringmode' middleware is nice but we have to tweak each
+     and every URL that is generated or, worse, stored, which include
+     search results (the path is stored as a metadata).
 
-- see 'repoze.bfg.viewgroup' package
+  2. A simple solution would be to set a cookie when the user wants to
+     manage content. This makes it hard to provide a "preview" page,
+     though.
 
 
 More
@@ -48,3 +63,5 @@ Credits
 Breadcrumbs: Veerle Pieters (http://veerle-v2.duoh.com/blog/about/)
 
 Icons of content types: Plone
+
+"Tick" image: FIXME

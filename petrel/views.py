@@ -16,6 +16,8 @@ def get_default_view_bindings(request):
     context = request.context
     api = TemplateAPI(request)
     return dict(api=api,
+                load_jquery=False,
+                load_editor=False,
                 addable_types=context.get_addable_types(),
                 request=request,
                 context=context,
@@ -28,5 +30,5 @@ def redirect_to(url, **kwargs):
         url += '?'
         for param, value in kwargs.items():
             url += u'%s=%s&' % (param, quote_plus(value))
-        url.rstrip('&')
+        url = url.rstrip('&')
     return HTTPFound(location=url)

@@ -1,4 +1,4 @@
-from pyramid.chameleon_zpt import get_template
+from pyramid.renderers import get_renderer
 from pyramid.url import static_url
 from pyramid.traversal import find_root
 
@@ -17,7 +17,7 @@ class TemplateAPI(object):
         else:
             self.status_message = self.error_message = ''
         self.site = find_root(request.context)
-        self.layout = get_template('templates/layout.pt')
+        self.layout = get_renderer('templates/layout.pt').implementation()
         ## FIXME: not sure yet if this is going to be useful
         self.show_login_link = True
         if request.url.split('?')[0].endswith('login_form'):

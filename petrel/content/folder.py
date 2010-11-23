@@ -84,16 +84,6 @@ class Folder(BaseFolder, BaseContent):
         return obj_id not in self
 
 
-def folder_action_handler(request):
-    ## FIXME: use 'request_param' in the view directive instead
-    ## (cf.http://docs.repoze.org/bfg/1.3/narr/views.html#predicate-arguments)
-    action = request.POST['action']
-    if action == 'delete':
-        return folder_delete(request)
-    else:
-        raise ValueError(u'Unexpected action')
-
-
 def folder_delete(request):
     folder = request.context
     for name in request.POST.getall('selected'):
@@ -104,8 +94,10 @@ def folder_delete(request):
 
 def folder_rename_form(request):
     bindings = get_default_view_bindings(request)
-    name = request.POST['selected'][0]
-    bindings = bindings.update(name=name)
+    names = request.POST.getall('selected')
+    bindings.update(items=[{'id': name,
+                            'title': request.context[name].title} \
+                               for name in names])
     return bindings
 
 

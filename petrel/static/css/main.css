@@ -31,12 +31,27 @@ body {
     font-size: 100%; /* 16px */
 }
 
-h1 {
+h1, h2, h3, h4 {
     font-size: 1.4em;
     font-weight: bold;
     padding-bottom: 0.2em;
     border-bottom: 0.1em solid #CCCCCC;
     margin-bottom: 0.7em; /* 1em / font-size */
+}
+
+h2 {
+    font-size: 1.2em;
+    font-weight: bold
+}
+
+h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 1em;
+    font-weight: normal;    
 }
 
 /* FIXME: h1, h2, h3, h4, h5 */
@@ -49,7 +64,7 @@ a {
     color: #700001;
     text-decoration: none;
     padding-bottom: 0.1em;
-    border-bottom: 0.05em inset #144578;
+    border-bottom: 0.05em inset #700001;
 }
 
 a:hover {
@@ -85,18 +100,19 @@ a:hover {
 
 #footer {
     clear: both;
-    width: 50em;
-    margin-top: 0 1em; /* 1 / font-size */
-    padding: 1em; /* font-size */
+    margin: 1em auto; /* 1 / font-size */
+    padding-top: 0.5em; /* font-size */
     font-size: 1em;
     border-top: 0.05em solid #CCCCCC;
     background-color: white;
     color: black;
     list-style-type: none;
+    text-align: center;
 }
 
 #footer li {
     display: inline;
+    padding: 1em;
 }
 /***********************************************************/
 
@@ -179,12 +195,12 @@ li.action a {
 
 li.action {
     display: inline;
-    border-right: 0.1em solid #CCCCCC;
+    border-left: 0.1em solid #CCCCCC;
     padding: 0.5em;
 }
 
-li.lastAction {
-    border-right: 0;
+li.firstAction {
+    border-left: 0;
 }
 /***********************************************************/
 
@@ -282,6 +298,17 @@ div.formError {
     /* FIXME */
 }
 
+button {
+    font-weight: bold;
+    padding: 0.5em;
+    font-size: 1.2em;
+}
+
+button img {
+    vertical-align: middle;
+}
+
+/* FIXME: nothing to do with forms... */
 #folderActions {
     list-style-type: none;
 }

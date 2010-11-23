@@ -12,8 +12,23 @@
   <link rel="stylesheet" type="text/css"
         tal:attributes="href api.static_url('static/css/main.css')"/>
   <script type="text/javascript"
+          tal:condition="python: load_editor or load_jquery"
           tal:attributes="src api.static_url('static/js/jquery-1.4.2.min.js')">
   </script>
+  <tal:wysiwyg-editor tal:condition="load_editor">
+    <script type="text/javascript"
+            tal:attributes="src api.static_url('static/js/cleditor.min.js')">
+    </script>
+      <link rel="stylesheet" type="text/css"
+            tal:attributes="href api.static_url('static/css/cleditor.css')"/>
+    <script type="text/javascript">
+      $(document).ready(function() {
+         // FIXME: we could store the name of the HTML fields in 'load_editor'
+        $("#body").cleditor();
+      });
+    </script>
+  </tal:wysiwyg-editor>
+  <!-- FIXME: conditionally load this file. It's needed only for folder listing  -->
   <script type="text/javascript"
           tal:attributes="src api.static_url('static/js/utils.js')"></script>
   <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->
@@ -47,12 +62,8 @@
          tal:content="api.error_message"/>
 
     <ol id="actions">
-      <li tal:attributes="class 'action lastAction'
-                              if not addable_types else 'action'">
-        <a tal:attributes="href '%s/edit_form' % context_url">Edit</a>
-      </li>
       <li tal:condition="addable_types"
-          class="action lastAction dropdownController">
+          class="action firstAction dropdownController">
         <a href="#" onclick="return false;">Add content&hellip;</a>
         <ol class="dropdown">
           <li tal:repeat="type addable_types">
@@ -61,18 +72,21 @@
           </li>
         </ol>
       </li>
+      <li tal:attributes="class 'action firstAction'
+                              if not addable_types else 'action'">
+        <a tal:attributes="href '%s/edit_form' % context_url">Edit</a>
+      </li>
     </ol>
 
     <metal:content metal:define-slot="content"/>
   </div>
 
-  <!-- FIXME: do we need a footer at all? Could we not move this information on the same line as the breadcrumbs? -->
-  <ol id="footer" tal:condition="None">
-    <li tal:condition="not api.user_cn and api.show_login_link">
-      <a tal:attributes="href api.url_of('login_form?manual=1')">log in</a>
+  <ol id="footer">
+    <li>
+      <a tal:attributes="href api.url_of('search_form')">search form</a>
     </li>
-    <li tal:condition="api.user_cn">
-      <a tal:attributes="href api.url_of('logout')">log out</a>
+    <li>
+      <a tal:attributes="href api.url_of('sitemap')">site map</a>
     </li>
   </ol>
 

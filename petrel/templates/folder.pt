@@ -46,6 +46,7 @@
   </table>
   <ol id="folderActions">
     <li><input type="submit" name="action" value="delete"/></li>
+    <li><input type="submit" name="action" value="rename"/></li>
   </ol>
 </form>
 

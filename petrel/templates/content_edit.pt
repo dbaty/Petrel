@@ -3,12 +3,11 @@
 
 <h1 tal:condition="add_mode">Add new <span tal:replace="content_type"/></h1>
 <h1 tal:condition="not add_mode">
-  Editing <span tal:replace="context.title"/>&hellip;
+  Editing "<span tal:replace="context.title"/>"&hellip;
 </h1>
 
 <form tal:attributes="action action"
       method="POST">
-
   <div class="formRow"
        tal:repeat="field form">
     <label tal:attributes="for field.id;
@@ -27,10 +26,11 @@
   </div>
 
   <div class="buttons">
-    <button type="submit" class="positive">
-      <img tal:attributes="src api.url_of('static/img/tick.png')" alt=""/>
+    <button type="submit">
+      <img tal:attributes="src api.static_url('static/img/tick.png')" alt=""/>
       <span tal:replace="('Add %s' % content_type) if add_mode else 'Save'"/>
     </button>
+    <a tal:attributes="href context_url">Cancel</a>
   </div>
 </form>
 
