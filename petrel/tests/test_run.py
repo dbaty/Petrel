@@ -18,3 +18,9 @@ class TestApp(TestCase):
         settings = {'zodb_uri': 'file://%s/Data.fs' % gettempdir()}
         wsgi_app = app(global_settings, **settings)
         self.assert_(isinstance(wsgi_app, Router))
+
+    def test_app_no_zodb_uri(self):
+        from petrel.run import app
+        global_settings = {}
+        settings = {}
+        self.assertRaises(ValueError, app, global_settings, **settings)

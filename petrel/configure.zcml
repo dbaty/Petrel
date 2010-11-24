@@ -5,10 +5,6 @@
 
   <static name="petrel" path="static"/>
 
-  <!-- FIXME: debug only -->
-  <view name="_debug"
-        view=".content.site.debug"/>
-
   <!-- Content types -->
   <content_type
      klass="petrel.content.folder.Folder"

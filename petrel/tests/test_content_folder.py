@@ -34,11 +34,11 @@ class TestFolder(TestCase):
     def _make_document(self, parent, name):
         from petrel.content.document import Document
         document = Document()
-        document.id = name
+        document.id = name ## FIXME: is this needed?
         parent.add(name, document)
         return document
 
-    def _make_request(self, post=None, context=None):
+    def _make_request(self, context=None, post=None):
         from pyramid.testing import DummyRequest
         if post is not None:
             from webob.multidict import MultiDict
@@ -46,6 +46,49 @@ class TestFolder(TestCase):
         req = DummyRequest(post=post)
         req.context = context
         return req
+
+    def test_validate_id(self):
+        from petrel.content.folder import FORBIDDEN_NAMES
+        folder = self._make_folder(self._make_site(), 'folder')
+        self._make_document(folder, 'doc1')
+        allowed = ('doc2', 'foo', 'foo_bar', 'foo-bar.baz')
+        forbidden = ('_foo', '-foo', '.foo', 'a/b', 'a?', u'\xe9', 'doc1')
+        forbidden += FORBIDDEN_NAMES
+        for name in allowed:
+            self.assert_(folder.validate_id(name),
+                         '%s should be allowed' % name)
+        for name in forbidden:
+            self.assert_(not folder.validate_id(name),
+                         '%s should be forbidden' % name)
+
+    def test_delete(self):
+        from pyramid.url import model_url
+        from petrel.content.folder import folder_delete
+        folder = self._make_folder(self._make_site(), 'folder')
+        self._make_document(folder, 'doc1')
+        self._make_document(folder, 'doc2')
+        self._make_document(folder, 'doc3')
+        post = (('selected', 'doc1'), ('selected', 'doc2'))
+        req = self._make_request(context=folder, post=post)
+        resp = folder_delete(req)
+        self.assert_(resp.headers['Location'], model_url(folder, req))
+        self.assertEqual(list(folder.keys()), ['doc3'])
+
+    def test_rename_form(self):
+        from petrel.content.folder import folder_rename_form
+        folder = self._make_folder(self._make_site(), 'folder')
+        doc1 = self._make_document(folder, 'doc1')
+        doc1.title = u'Document 1'
+        doc2 = self._make_document(folder, 'doc2')
+        doc2.title = u'Document 2'
+        post = (('selected', 'doc1'), ('selected', 'doc2'))
+        req = self._make_request(context=folder, post=post)
+        bindings = folder_rename_form(req)
+        self.assertEqual(bindings['items'],
+                         [{'id': 'doc1',
+                           'title': 'Document 1'},
+                          {'id': 'doc2',
+                           'title': 'Document 2'}])
 
     def test_rename_item(self):
         from pyramid.url import model_url

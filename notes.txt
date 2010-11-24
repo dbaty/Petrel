@@ -1,6 +1,10 @@
 Todo
 ====
 
+- use 'name' or 'id', not both
+
+- add tests;
+
 - implement navigation tree;
 
 - imlement site map;
@@ -10,8 +14,6 @@ Todo
 - order items in folder (see recent changes in repoze.folder);
 
 - add 'file' and 'image' content types;
-
-- add tests.
 
 - ability to select a default document in a folder
 

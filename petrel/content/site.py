@@ -43,20 +43,17 @@ def search_form(request):
 
 def search(request):
     bindings = get_default_view_bindings(request)
-    catalog = get_catalog(request.context)
     text = request.POST.get('text', '')
-    results = catalog.search(searchable_text=text,
-                             sort_index='searchable_text')
-    n_results, results = results
-    doc_map = get_catalog_document_map(request.context)
-    results = [doc_map.get_metadata(doc_id) for doc_id in results]
+    if text:
+        catalog = get_catalog(request.context)
+        results = catalog.search(searchable_text=text,
+                                 sort_index='searchable_text')
+        n_results, results = results
+        if results:
+            doc_map = get_catalog_document_map(request.context)
+            results = [doc_map.get_metadata(doc_id) for doc_id in results]
+    else:
+        n_results = 0
+        results = ()
     bindings.update(n_results=n_results, results=results)
     return bindings
-
-
-def debug(request): ## FIXME: debug only
-    context = request.context
-    from pyramid.traversal import find_root
-    site = find_root(context)
-    import pdb; pdb.set_trace()
-    site

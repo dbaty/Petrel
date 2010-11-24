@@ -4,6 +4,8 @@ views, etc.
 $Id$
 """
 
+import re
+
 from pyramid.threadlocal import get_current_registry
 
 from repoze.folder import Folder as BaseFolder
@@ -21,6 +23,13 @@ from petrel.interfaces import IFolderish
 from petrel.views import get_default_view_bindings
 from petrel.views import redirect_to
 
+
+ALLOWED_NAME = re.compile('^[a-zA-Z0-9]+[\w.-]*$')
+FORBIDDEN_NAMES = ('folder_add_form', 'document_add_form',
+                   'addFolder', 'addDocument',
+                   'edit_form', 'edit',
+                   'search_form', 'search',
+                   'sitemap')
 
 class FolderAddForm(BaseContentAddForm, ):
     pass
@@ -81,6 +90,10 @@ class Folder(BaseFolder, BaseContent):
         """Validate that ``obj_id`` is a valid id in this folderish
         item.
         """
+        if not ALLOWED_NAME.match(obj_id):
+            return False
+        if obj_id in FORBIDDEN_NAMES:
+            return False
         return obj_id not in self
 
 
