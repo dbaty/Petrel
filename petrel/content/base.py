@@ -1,6 +1,7 @@
 from persistent import Persistent
 
 from pyramid.location import lineage
+from pyramid.renderers import render_to_response
 from pyramid.threadlocal import get_current_registry
 from pyramid.url import model_url
 
@@ -13,7 +14,6 @@ from petrel.content.registry import get_content_type_registry
 from petrel.events import ObjectModifiedEvent
 from petrel.views import get_default_view_bindings
 from petrel.views import redirect_to
-
 
 class BaseContent(Persistent, CatalogAware):
 
@@ -101,7 +101,10 @@ class BaseContentEditForm:
 
 
 def content_view(request):
-    return get_default_view_bindings(request)
+    ct_registry = get_content_type_registry(request.registry)
+    template = ct_registry[request.context.meta_type]['display_view_template']
+    return render_to_response(template,
+                              get_default_view_bindings(request))
 
 
 def content_add_form(content_type, request, form=None):

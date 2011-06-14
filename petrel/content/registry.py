@@ -13,6 +13,9 @@ from petrel.interfaces import IContentTypeRegistry
 class ContentTypeRegistry(dict):
     implements(IContentTypeRegistry)
 
+## FIXME: values of the registry should not be dictionaries, but
+## rather a specific class.
+
 
 def get_content_type_registry(pyramid_registry=None):
     """Return Petrel content type registry."""

@@ -223,7 +223,6 @@ li.firstAction {
 }
 
 .dropdown li {
-    border: 20px slid blue;
     display: block;
     border-bottom: 0.1em solid #CCCCCC;
     padding: 0.5em 0;

@@ -27,26 +27,24 @@ class IContentTypeDirective(Interface):
         title=u'The class of the content type.',
         required=True)
     display_view = GlobalObject(
-        title=u'The view that is called to display the item.',
+        title=u'The optional view that is called to display the item. Default is ``petrel.content.base.content_view``.',
         required=False)
-    ## We sure could have provided a default view template but,
-    ## usually, the template is customized anyway.
-    display_view_renderer = TextLine(
-        title=u'The (optional) template used when displaying the item.',
-        required=True)
+    display_view_template = TextLine(
+        title=u'The optional template used when displaying the item. It is required only if you do not provide a specific ``display_view``.',
+        required=False)
     add_form_view = GlobalObject(
-        title=u'The view that is called to display the add form',
+        title=u'The view that is called to display the add form.',
         required=False)
-    add_form_renderer = TextLine(
+    add_form_template = TextLine(
         title=u'The (optional) template used to render the add form view.',
         required=False)
     add_view = GlobalObject(
         title=u'The view that is called to add an item.',
         required=False)
     edit_form_view = GlobalObject(
-        title=u'The view that is called to display the edit form',
+        title=u'The view that is called to display the edit form.',
         required=False)
-    edit_form_renderer = TextLine(
+    edit_form_template = TextLine(
         title=u'The (optional) template used to render the edit form view.',
         required=False)
     edit_view = GlobalObject(
@@ -65,32 +63,32 @@ def _register_content_type(_context, **kwargs):
 ## FIXME: we should try to move this functionto the 'registry' module
 ## (or perhaps the 'ContentTypeRegistry' class).
 def register_content_type(klass,
-                          display_view_renderer,
+                          display_view_template,
                           display_view=None,
                           add_form_view=None,
-                          add_form_renderer=None,
+                          add_form_template=None,
                           add_view=None,
                           edit_form_view=None,
-                          edit_form_renderer=None,
+                          edit_form_template=None,
                           edit_view=None):
     """FIXME: document args"""
     if display_view is None:
         display_view = content_view
-        if display_view_renderer is None:
+        if display_view_template is None:
             raise ValueError(
                 'Content type "%s" uses default display view but '
-                'does not define any renderer. A renderer is '
+                'does not define any template. A template is '
                 'required in this case.' % klass)
     if add_form_view is None:
         add_form_view = lambda request, form=None: content_add_form(
             klass, request, form)
-        if add_form_renderer is None:
+        if add_form_template is None:
             add_form_renderer = 'templates/content_edit.pt'
     if add_view is None:
         add_view = lambda request: content_add(klass, request)
     if edit_form_view is None:
         edit_form_view = content_edit_form
-        if edit_form_renderer is None:
+        if edit_form_template is None:
             edit_form_renderer = 'templates/content_edit.pt'
     if edit_view is None:
         edit_view = content_edit
@@ -111,7 +109,7 @@ def register_content_type(klass,
                     renderer=add_form_renderer)
     config.add_view(context=klass,
                     view=display_view,
-                    renderer=display_view_renderer)
+                    renderer=display_view_template)
     config.add_view(name='edit_form',
                     context=klass,
                     view=edit_form_view,
@@ -129,4 +127,5 @@ def register_content_type(klass,
     ct_registry[klass.meta_type] = dict(
         label=klass.label,
         add_form_view=add_form_view,
-        edit_form_view=edit_form_view)
+        edit_form_view=edit_form_view,
+        display_view_template=display_view_template)

@@ -7,8 +7,11 @@
 
   <!-- Content types -->
   <content_type
+     klass="petrel.content.site.Site"
+     display_view_template="petrel:templates/folder.pt"/>
+  <content_type
      klass="petrel.content.folder.Folder"
-     display_view_renderer="templates/folder.pt"/>
+     display_view_template="petrel:templates/folder.pt"/>
   <view context=".interfaces.IFolderish"
         name="folder_action_handler"
         request_param="action=delete"
@@ -23,7 +26,7 @@
         view=".content.folder.folder_rename"/>
   <content_type
      klass="petrel.content.document.Document"
-     display_view_renderer="templates/document.pt"/>
+     display_view_template="petrel:templates/document.pt"/>
 
 
   <!-- Search -->

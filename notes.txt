@@ -1,6 +1,14 @@
 Todo
 ====
 
+- change implementation of content types views:
+
+  - views should be configured one by one in a directive within
+    '<content_type>';
+
+  - templates should be specified within the view function, not the
+    ZCML directive.
+
 - use 'name' or 'id', not both
 
 - add tests;
@@ -46,7 +54,9 @@ Pluggability
 
   1. The 'authoringmode' middleware is nice but we have to tweak each
      and every URL that is generated or, worse, stored, which include
-     search results (the path is stored as a metadata).
+     search results (the path is stored as a metadata). On the other
+     hand, the middleware could also process HTML on egress,
+     i.e. inserting the '/authoring/' prefix.
 
   2. A simple solution would be to set a cookie when the user wants to
      manage content. This makes it hard to provide a "preview" page,
