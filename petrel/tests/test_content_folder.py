@@ -5,20 +5,18 @@ $Id$
 
 from unittest import TestCase
 
+from pyramid import testing
+
 
 class TestFolder(TestCase):
 
     def setUp(self):
-        from pyramid.configuration import Configurator
-        self.config = Configurator()
-        ## We need to register these templates since they are used in
-        ## TemplateAPI which is in turn used in almost all views.
-        self.config.testing_add_template('templates/layout.pt')
-        self.config.begin()
-        self.config.load_zcml('petrel:configure.zcml')
+        self.config = testing.setUp()
+        from petrel.config import set_default_config
+        set_default_config(self.config)
 
     def tearDown(self):
-        self.config.end()
+        testing.tearDown()
 
     def _make_site(self):
         from petrel.content.site import Site

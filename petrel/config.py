@@ -14,17 +14,19 @@ def app_maker(zodb_root):
     return zodb_root['app_root']
 
 
-def get_default_config(app_maker=app_maker, **settings):
+## FIXME: the name does not sound right.
+def set_default_config(config=None, app_maker=app_maker, **settings):
     """Provide a default configuration for a Petrel-based
     application.
     """
-    zodb_uri = settings.get('zodb_uri')
-    if not zodb_uri:
-        raise ValueError("No 'zodb_uri' in application configuration.")
-    finder = PersistentApplicationFinder(zodb_uri, app_maker)
-    def get_root(request):
-        return finder(request.environ)
-    config = Configurator(root_factory=get_root, settings=settings)
+    if config is None:
+        zodb_uri = settings.get('zodb_uri')
+        if not zodb_uri:
+            raise ValueError("No 'zodb_uri' in application configuration.")
+        finder = PersistentApplicationFinder(zodb_uri, app_maker)
+        def get_root(request):
+            return finder(request.environ)
+        config = Configurator(root_factory=get_root, settings=settings)
 
     ## Register default content types
     from petrel.content.document import Document

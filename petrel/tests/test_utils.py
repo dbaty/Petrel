@@ -11,15 +11,8 @@ def _convert_nav_tree(tree):
 class TestUtils(unittest.TestCase):
 
     def setUp(self):
-        from pyramid.configuration import Configurator
         from petrel.content.site import Site
-        self.config = Configurator()
-        self.config.begin()
-        self.config.load_zcml('petrel:configure.zcml')
         self.site = Site()
-
-    def tearDown(self):
-        self.config.end()
 
     def _make_folder(self, folder_id, parent=None):
         from petrel.content.folder import Folder

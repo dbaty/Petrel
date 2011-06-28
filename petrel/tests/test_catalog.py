@@ -1,18 +1,19 @@
 import unittest
 
+from pyramid import testing
+
 
 class TestCatalog(unittest.TestCase):
 
     def setUp(self):
-        from pyramid.configuration import Configurator
+        from petrel.config import set_default_config
         from petrel.content.site import Site
-        self.config = Configurator()
-        self.config.begin()
-        self.config.load_zcml('petrel:configure.zcml')
+        self.config = testing.setUp()
+        set_default_config(self.config)
         self.site = Site()
 
     def tearDown(self):
-        self.config.end()
+        testing.tearDown()
 
     def _makeDoc(self, parent=None):
         from petrel.content.document import Document
