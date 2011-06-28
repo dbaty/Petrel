@@ -13,15 +13,6 @@ from petrel.interfaces import IFolderish
 from petrel.views import get_default_view_bindings
 
 
-def appmaker(zodb_root):
-    if not 'app_root' in zodb_root:
-        app_root = Site()
-        zodb_root['app_root'] = app_root
-        import transaction
-        transaction.commit()
-    return zodb_root['app_root']
-
-
 class Site(Folder):
     implements(IFolderish)
 

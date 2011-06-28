@@ -18,7 +18,6 @@ from zope.interface import implements
 from petrel.content.base import BaseContent
 from petrel.content.base import BaseContentAddForm
 from petrel.content.base import BaseContentEditForm
-from petrel.content.registry import get_content_type_registry
 from petrel.interfaces import IFolderish
 from petrel.views import get_default_view_bindings
 from petrel.views import redirect_to
@@ -81,10 +80,11 @@ class Folder(BaseFolder, BaseContent):
             self.add(new_name, obj)
         return True
 
-    def get_addable_types(self, registry):
-        ct_registry = get_content_type_registry(registry)
-        return [(ct['label'], '%s_add_form' % meta_type.lower()) \
-                    for meta_type, ct in ct_registry.items()]
+## FIXME: move elsewhere
+#    def get_addable_types(self, registry):
+#        ct_registry = get_content_type_registry(registry)
+#        return [(ct['label'], '%s_add_form' % meta_type.lower()) \
+#                    for meta_type, ct in ct_registry.items()]
 
     def validate_id(self, obj_id):
         """Validate that ``obj_id`` is a valid id in this folderish

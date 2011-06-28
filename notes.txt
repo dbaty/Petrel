@@ -63,6 +63,13 @@ Pluggability
      though.
 
 
+Ideas
+=====
+
+http://plugins.jquery.com/project/jquery-toastmessage-plugin
+
+
+
 More
 ====
 
