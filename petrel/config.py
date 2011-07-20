@@ -1,5 +1,7 @@
 from pyramid.configuration import Configurator as Base
 
+from pyramid_beaker import session_factory_from_settings
+
 from repoze.zodbconn.finder import PersistentApplicationFinder
 
 from petrel.content.registry import get_content_type_registry
@@ -33,7 +35,7 @@ class Configurator(Base):
             entry['display_view_template'] = display_view_template
 
 
-    def registerTemplateAPI(self, factory):
+    def registerTemplateAPI(self, factory): ## FIXME: naming
         self.registry.registerUtility(factory, ITemplateAPI)
 
 
@@ -77,16 +79,16 @@ class Configurator(Base):
 
         ## Register views
         ## FIXME: check that we still need all this.
-        self.add_view(name='%s_add_form' % klass.meta_type.lower(),
-                      context=IFolderish,
-                      view=add_form_view,
-                      renderer=add_form_renderer)
         ## The 'renderer' attribute below is needed when the view has
         ## to redisplay the add form.
-        self.add_view(name='add%s' % klass.meta_type,
+        self.add_view(name='add_%s' % klass.meta_type.lower(),
                       context=IFolderish,
                       request_method='POST',
                       view=add_view,
+                      renderer=add_form_renderer)
+        self.add_view(name='add_%s' % klass.meta_type.lower(),
+                      context=IFolderish,
+                      view=add_form_view,
                       renderer=add_form_renderer)
         self.add_view(context=klass,
                       view=display_view,
@@ -115,9 +117,6 @@ class Configurator(Base):
             display_view_template=display_view_template)
 
 
-
-
-
 ## FIXME: the name of the method does not sound right.
 ## FIXME: arguments do not sound right either...
 def get_default_config(base_config=None, **settings):
@@ -133,18 +132,26 @@ def get_default_config(base_config=None, **settings):
         finder = PersistentApplicationFinder(zodb_uri, app_maker)
         def get_root(request):
             return finder(request.environ)
-        config = Configurator(root_factory=get_root, settings=settings)
+        session_factory = session_factory_from_settings(settings)
+        config = Configurator(root_factory=get_root,
+                              session_factory=session_factory,
+                              settings=settings)
 
     ## Register default content types
     from petrel.content.document import Document
     from petrel.content.folder import Folder
+    from petrel.content.folder import folder_contents
     from petrel.content.site import Site
-    ## FIXME: we may have two static views with the same name
-    ## ('static'). This one should be more specific.
+    ## FIXME: look at the new cache_max_age argument
     config.add_static_view(name='static-petrel', path='petrel:static')
     ## FIXME: we should not define any view template
     config.register_content_type(Site)
     config.register_content_type(Folder)
+    config.register_content_type(Document)
+    config.add_view(name='contents',
+                    context=IFolderish,
+                    view=folder_contents,
+                    renderer='templates/folder_contents.pt')
     ## FIXME: folder actions are missing (delete, rename, etc.)
 #   <view context=".interfaces.IFolderish"
 #         name="folder_action_handler"
@@ -158,7 +165,6 @@ def get_default_config(base_config=None, **settings):
 #   <view context=".interfaces.IFolderish"
 #         name="rename"
 #         view=".content.folder.folder_rename"/>
-    config.register_content_type(Document)
 
     ## Register default subscribers
     from repoze.folder.interfaces import IObjectAddedEvent

@@ -1,6 +1,0 @@
-<form action="addFolder"
-      method="POST">
-  Id: <input type="text" name="id"/><br/>
-  Title: <input type="text" name="title"/><br/>
-  <input type="submit" value="Add folder"/>
-</form>

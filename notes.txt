@@ -1,13 +1,7 @@
 Todo
 ====
 
-- change implementation of content types views:
-
-  - views should be configured one by one in a directive within
-    '<content_type>';
-
-  - templates should be specified within the view function, not the
-    ZCML directive.
+- add tests;
 
 - reorganize API::
 
@@ -18,19 +12,25 @@ Todo
   nav.get_nav_tree
   utils.TemplateAPI
 
-- use 'name' or 'id', not both
+- add 'file' and 'image' content types
 
-- add tests;
+- switch from cleditor to TinyMCE
+
+- use 'name' or 'id', not both
 
 - implement navigation tree;
 
-- imlement site map;
+- implement site map;
 
-- order items in folder (see recent changes in repoze.folder);
+- update 'admin.css' and 'toolbar.css'
 
-- add 'file' and 'image' content types;
+- enhance success/error message (using
+  http://plugins.jquery.com/project/jquery-toastmessage-plugin)
 
-- ability to select a default document in a folder
+- use a prefix to avoid clashes between views and resources (for
+  example, '@edit' instead of 'edit')
+
+- order items in folder (see recent changes in repoze.folder)
 
 - use the catalog to list items in the folder view page (?)
 
@@ -39,50 +39,21 @@ Todo
 - add a tab to enter metadata in the edit form: keywords, author,
   language, etc.
 
-- configure CLEditor:
+- protection against CSRF
 
-  - do not show all buttons in the toolbar;
+- implement an error page for 404 errors (?)
 
-  - make the editor wider;
-
-  - use the CSS of the site.
-
-- implement an error page for 404 errors
-
-- inline editing
-
-
-Pluggability
-============
-
-- create an example application that registers new content types, use
-  a different layout/CSS, etc.
-
-- implement a mechanism that lets us have a different layout/CSS if we
-  are managing content.
-
-  1. The 'authoringmode' middleware is nice but we have to tweak each
-     and every URL that is generated or, worse, stored, which include
-     search results (the path is stored as a metadata). On the other
-     hand, the middleware could also process HTML on egress,
-     i.e. inserting the '/authoring/' prefix.
-
-  2. A simple solution would be to set a cookie when the user wants to
-     manage content. This makes it hard to provide a "preview" page,
-     though.
-
-
-Ideas
-=====
-
-http://plugins.jquery.com/project/jquery-toastmessage-plugin
-
-
-
-More
-====
+- authentication & authorization
 
 - i18n
+
+- think about switching to 'deform'. Although WTForms is simple and
+  works, it does not seem to get much traction and only contains very
+  simple widgets.
+
+- settle on using 'tal:xxx' or '${}' substition in templates.
+
+- inline editing
 
 
 Credits

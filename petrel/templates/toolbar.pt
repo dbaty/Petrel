@@ -49,6 +49,14 @@
       </dl>
     </li>
   </ol>
+
+  <!-- FIXME: use jQuery Toast Message plug-in -->
+  <div class="success-message"
+       tal:repeat="msg api.success_messages"
+       tal:content="msg"/>
+  <div class="error-message"
+       tal:repeat="msg api.error_messages"
+       tal:content="msg"/>
 </div>
 
 <script src="${api.static_url('petrel:static/js/jquery.min.js')}"></script>

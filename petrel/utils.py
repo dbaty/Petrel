@@ -21,6 +21,14 @@ class TemplateAPI(object):
         self.admin_toolbar = get_template('petrel:templates/toolbar.pt').macros['toolbar']
         self.context_url = request.resource_url(request.context)
 
+    @property
+    def success_messages(self):
+        return self.request.session.pop_flash('success')
+
+    @property
+    def error_messages(self):
+        return self.request.session.pop_flash('error')
+
     def url(self, obj):
         return self.request.resource_url(obj)
 

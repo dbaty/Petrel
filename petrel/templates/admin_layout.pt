@@ -29,7 +29,7 @@
       });
     </script>
   </tal:wysiwyg-editor>
-  <!-- FIXME: conditionally load this file. It's needed only for folder listing  -->
+  <!-- FIXME: conditionally load this file. It's needed only for folder listing  (for now). Think about renaming it. -->
   <script type="text/javascript"
           tal:attributes="src api.static_url('petrel:static/js/utils.js')"></script>
   <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->
@@ -37,26 +37,12 @@
 <body>
 
   <div metal:use-macro="api.admin_toolbar"></div>
-  <!-- FIXME: include toolbar with use-macro -->
-
-  <div id="header">
-    <a tal:attributes="href api.url(api.site)"
-       tal:content="api.site.title"/> -- ADMIN
-  </div>
 
   <ol id="navtree"
       tal:content="structure api.get_nav_tree()">
   </ol>
 
   <div id="content">
-    <tal:fixme tal:condition="False and 'FIXME'">
-    <div class="statusMessage"
-         tal:condition="api.status_message"
-         tal:content="api.status_message"/>
-    <div class="errorMessage"
-         tal:condition="api.error_message"
-         tal:content="api.error_message"/>
-    </tal:fixme>
     <metal:content metal:define-slot="content"/>
   </div>
 

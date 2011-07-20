@@ -17,6 +17,8 @@ h1, h2, h3, h4, h5 {
 /***********************************************************/
 
 
+/* FIXME: use lower-case names */
+
 
 /***********************************************************
 ** Default and general settings
@@ -146,94 +148,11 @@ a:hover {
 /***********************************************************/
 
 
-/***********************************************************
-** Breacrumbs
-*************/
-#breadcrumbs {
-    list-style-type: none;
-    font-size: 0.8em;
-    padding: 0.5em;
-    border: 0.1em solid #DEDEDE;
-    margin-bottom: 1em;
-}
-
-#breadcrumbs li {
-    display: inline;
-    padding: 0.5em;
-    background: url('../img/breadcrumbs-bg.gif') no-repeat right center; /* FIXME: make this a PNG file */
-}
-
-#breadcrumbs li.currentInBreadcrumbs {
-    background: none;
-}
-
-#breadcrumbs li a {
-    padding: 0 1em;
-    border: 0;
-}
-
-#breadcrumbs li a:hover {
-    text-decoration: underline;
-}
-/***********************************************************/
-
-
-/***********************************************************
-** Actions
-**********/
-#actions {
-    list-style-type: none;
-    clear: both;
-    font-size: 0.8em;
-    padding: 0.5em;
-    float: right;
-}
-
-li.action a {
-    border: 0;
-}
-
-li.action {
-    display: inline;
-    border-left: 0.1em solid #CCCCCC;
-    padding: 0.5em;
-}
-
-li.firstAction {
-    border-left: 0;
-}
-/***********************************************************/
-
-
-/***********************************************************
-** Drop-down menus
-** using "Suckerfish Dropdowns" on ALA
-** (http://www.alistapart.com/articles/dropdowns/)
-**************************************************/
-.dropdown {
-    padding-top: 1em;
-    position: absolute;
-    left: -999px;
-    background-color: white;
-    list-style-type: none;
-}
-
-.dropdownController:hover .dropdown {
-    left: auto;
-}
-
-.dropdown li {
-    display: block;
-    border-bottom: 0.1em solid #CCCCCC;
-    padding: 0.5em 0;
-}
-/***********************************************************/
-
 
 /***********************************************************
 ** Error and status messages
 ****************************/
-div.statusMessage, div.errorMessage, div.formError {
+div.success-message, div.error-message, div.formError {
     border-width: 1px 1px 1px 0.5em;
     border-style: solid;
     font-weight: bold;
@@ -242,12 +161,12 @@ div.statusMessage, div.errorMessage, div.formError {
     margin-bottom: 0.5em;
 }
 
-div.statusMessage {
+div.success-message {
     border-color: #007D39;
     background-color: #F4FFFA;
 }
 
-div.errorMessage, div.formError {
+div.error-message, div.formError {
     color: #CC0000;
     border-color: #CC0000;
     background-color: #FFEEEE;
@@ -306,15 +225,6 @@ button {
 button img {
     vertical-align: middle;
 }
-
-/* FIXME: nothing to do with forms... */
-#folderActions {
-    list-style-type: none;
-}
-
-#folderActions li {
-    display: inline;
-}
 /***********************************************************/
 
 
@@ -348,3 +258,16 @@ table.listing a {
     border: 0;
 }
 /***********************************************************/
+
+
+/* FIXME : to be reorganized/sorted */
+
+.folder-contents {
+
+    font-size: 0.8em;
+}
+
+.folder-contents:before {
+    padding-right: 0.4em;
+    content: "|";
+}

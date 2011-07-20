@@ -8,6 +8,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
+    'pyramid_beaker',
     'repoze.catalog',
     'repoze.folder',
     'repoze.tm',
@@ -22,7 +23,7 @@ test_requires = requires + [
     ]
 
 setup(name='Petrel',
-      version='0.0',
+      version='0.1',
       description='Petrel',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[

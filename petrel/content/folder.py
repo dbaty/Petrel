@@ -13,11 +13,14 @@ from repoze.folder import unicodify
 from repoze.folder.events import ObjectAddedEvent
 from repoze.folder.events import ObjectWillBeRemovedEvent
 
+from wtforms.fields import TextAreaField
+
 from zope.interface import implements
 
 from petrel.content.base import BaseContent
 from petrel.content.base import BaseContentAddForm
 from petrel.content.base import BaseContentEditForm
+from petrel.content.base import get_template_api
 from petrel.content.registry import get_content_type_registry
 from petrel.interfaces import IFolderish
 from petrel.views import get_default_view_bindings
@@ -31,7 +34,7 @@ FORBIDDEN_NAMES = ('folder_add_form', 'document_add_form',
                    'sitemap')
 
 class FolderAddForm(BaseContentAddForm, ):
-    pass
+    body = TextAreaField(label=u'Body')
 
 
 class FolderEditForm(BaseContentEditForm, FolderAddForm):
@@ -43,7 +46,10 @@ class Folder(BaseFolder, BaseContent):
 
     meta_type = 'Folder'
     label = 'Folder'
-    icon = 'static/img/folder.gif'
+    is_folderish = True
+    icon = 'petrel:static/img/folder.gif'
+
+    body = u''
 
     add_form = FolderAddForm
     edit_form = FolderEditForm
@@ -95,6 +101,13 @@ class Folder(BaseFolder, BaseContent):
         if obj_id in FORBIDDEN_NAMES:
             return False
         return obj_id not in self
+
+
+def folder_contents(request):
+    return {'api': get_template_api(request),
+            'items': request.context.values(),
+            'load_jquery': False,
+            'load_editor': False}
 
 
 def folder_delete(request):

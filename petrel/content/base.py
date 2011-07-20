@@ -16,6 +16,8 @@ from petrel.views import get_default_view_bindings
 
 class BaseContent(Persistent, CatalogAware):
 
+    is_folderish = False
+
     title = u''
     description = u''
 
@@ -110,8 +112,7 @@ def content_add_form(content_type, request, form=None):
         form = content_type._get_add_form()
     ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type]['label']
-    bindings.update(action='add%s' % content_type.meta_type,
-                    load_jquery=True,
+    bindings.update(load_jquery=True,
                     load_editor=True,
                     content_type=label,
                     add_mode=True,
@@ -134,7 +135,8 @@ def content_add(content_type, request):
     label = ct_registry[content_type]['label']
     msg = (u'%s "%s" has been created and you are '
            'now viewing it.' % (label, form.title.data))
-    return redirect_to(item.get_url(request), status_message=msg)
+    request.session.flash(msg, 'success')
+    return HTTPSeeOther(request.resource_url(item))
 
 
 def content_edit_form(request, form=None):
@@ -145,8 +147,7 @@ def content_edit_form(request, form=None):
         form = context._get_edit_form()
     ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type]['label']
-    bindings.update(action='edit',
-                    load_jquery=True,
+    bindings.update(load_jquery=True,
                     load_editor=True,
                     content_type=label,
                     add_mode=False,
@@ -162,6 +163,5 @@ def content_edit(request):
         edit_form_view = ct_registry[item]['edit_form_view']
         return edit_form_view(request, form)
     form.populate_obj(item)
-    ## FIXME: configure session
-#    request.session.flash(u'Your changes have been saved.', 'status')
+    request.session.flash(u'Your changes have been saved.', 'success')
     return HTTPSeeOther(request.resource_url(item))
