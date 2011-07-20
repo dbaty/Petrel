@@ -1,7 +1,4 @@
-"""Helpers for ``repoze.catalog`` integration.
-
-$Id$
-"""
+"""Search functionalities."""
 
 from pyramid.traversal import find_root
 from pyramid.traversal import model_path
@@ -20,7 +17,11 @@ def create_catalog_tools(site):
     setattr(site, CATALOG_ID, Catalog())
     setattr(site, CATALOG_DOC_MAP_ID, DocumentMap())
     catalog = getattr(site, CATALOG_ID)
+    def get_path(obj, _unused_default=None):
+        return model_path(obj)
     catalog['path'] = CatalogPathIndex2(get_path)
+    def get_searchable_text(obj, _unused_default):
+        return obj.get_searchable_text()
     catalog['searchable_text'] = CatalogTextIndex(get_searchable_text)
 
 def get_catalog_document_map(obj):
@@ -31,19 +32,27 @@ def get_catalog(obj):
     site = find_root(obj)
     return getattr(site, CATALOG_ID)
 
-def get_path(obj, _unused_default=None):
-    return model_path(obj)
-
-def get_searchable_text(obj, _unused_default):
-    return obj.get_searchable_text()
-
 def get_all_contained_items_and_itself(self):
-    """Return all contained items and itself."""
     if getattr(self, 'values', None):
         for item in self.values():
             get_all_contained_items_and_itself(item)
             yield item ## FIXME: really needed?
     yield self
+
+## FIXME: just provide a utility function to be called by a view in
+## the application.
+def search(context, sort_index=None, **criteria):
+    """Return a list of metadata for the matching items."""
+    if not criteria:
+        return ()
+    catalog = get_catalog(context)
+    results = catalog.search(sort_index=sort_index, **criteria)
+    n_results, results = results
+    if not results:
+        return ()
+    doc_map = get_catalog_document_map(context)
+    return [doc_map.get_metadata(doc_id) for doc_id in results]
+
 
 class CatalogAware:
     """A mixin class that defines catalog-related methods."""
