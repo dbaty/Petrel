@@ -1,4 +1,4 @@
-<metal:layout metal:use-macro="api.layout">
+<metal:layout metal:use-macro="api.admin_layout">
 <metal:content metal:fill-slot="content">
 
 <h1 tal:condition="add_mode">Add new <span tal:replace="content_type"/></h1>
@@ -14,7 +14,7 @@
                            class 'required' in field.flags and 'required'">
       <span tal:replace="field.label.text"/>
       <img tal:condition="'required' in field.flags" 
-           tal:attributes="src api.static_url('static/img/required.png')"
+           tal:attributes="src api.static_url('petrel:static/img/required.png')"
            width="4" height="4" alt="(required)"/>
     </label>
     <div tal:condition="field.description" tal:content="field.description"
@@ -27,10 +27,10 @@
 
   <div class="buttons">
     <button type="submit">
-      <img tal:attributes="src api.static_url('static/img/tick.png')" alt=""/>
+      <img tal:attributes="src api.static_url('petrel:static/img/tick.png')" alt=""/>
       <span tal:replace="('Add %s' % content_type) if add_mode else 'Save'"/>
     </button>
-    <a tal:attributes="href context_url">Cancel</a>
+    <a tal:attributes="href api.context_url">Cancel</a>
   </div>
 </form>
 

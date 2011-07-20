@@ -9,6 +9,15 @@ Todo
   - templates should be specified within the view function, not the
     ZCML directive.
 
+- reorganize API::
+
+  forms.XXX  
+  manage.toolbar (?)
+  content.XXX
+  nav.get_breadcrumbs
+  nav.get_nav_tree
+  utils.TemplateAPI
+
 - use 'name' or 'id', not both
 
 - add tests;
@@ -16,8 +25,6 @@ Todo
 - implement navigation tree;
 
 - imlement site map;
-
-- refine CSS (footer, etc.);
 
 - order items in folder (see recent changes in repoze.folder);
 
@@ -30,7 +37,7 @@ Todo
 - add automatic creation and modification date attributes on items
 
 - add a tab to enter metadata in the edit form: keywords, author,
-  etc.
+  language, etc.
 
 - configure CLEditor:
 
@@ -41,6 +48,8 @@ Todo
   - use the CSS of the site.
 
 - implement an error page for 404 errors
+
+- inline editing
 
 
 Pluggability

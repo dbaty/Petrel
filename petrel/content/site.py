@@ -26,12 +26,9 @@ class Site(Folder):
         self.index() ## for 'utils.get_nav_tree()' to work properly
 
 
-def search_form(request):
-    bindings = get_default_view_bindings(request)
-    bindings.update(results=None)
-    return bindings
 
-
+## FIXME: just provide a utility function to be called by a view in
+## the application.
 def search(request):
     bindings = get_default_view_bindings(request)
     text = request.POST.get('text', '')

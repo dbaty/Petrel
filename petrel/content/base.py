@@ -1,9 +1,8 @@
 from persistent import Persistent
 
-from pyramid.location import lineage
+from pyramid.httpexceptions import HTTPSeeOther
 from pyramid.renderers import render_to_response
 from pyramid.threadlocal import get_current_registry
-from pyramid.url import model_url
 
 from wtforms.fields import TextField
 from wtforms.form import Form
@@ -13,7 +12,7 @@ from petrel.catalog import CatalogAware
 from petrel.content.registry import get_content_type_registry
 from petrel.events import ObjectModifiedEvent
 from petrel.views import get_default_view_bindings
-from petrel.views import redirect_to
+
 
 class BaseContent(Persistent, CatalogAware):
 
@@ -46,18 +45,8 @@ class BaseContent(Persistent, CatalogAware):
             registry = get_current_registry()
             registry.notify(ObjectModifiedEvent(self))
 
-    def get_addable_types(self, *args, **kwargs):
+    def get_addable_types(self, request):
         return ()
-
-    def get_url(self, request):
-        return model_url(self, request).strip('/')
-
-    def get_breadcrumbs(self):
-        ## FIXME: it is slighty more complicated than this. We should
-        ## return the default page of each parent in the lineage,
-        ## something like:
-        ## reversed([obj.getDefaultItem() for obj in lineage])
-        return list(lineage(self))[::-1]
 
 
 class BaseForm(Form):
@@ -100,11 +89,19 @@ class BaseContentEditForm:
     id = None
 
 
+## FIXME: move this elsewhere
+from petrel.interfaces import ITemplateAPI
+def get_template_api(request):
+    factory = request.registry.queryUtility(ITemplateAPI)
+    return factory(request)
+
+
 def content_view(request):
     ct_registry = get_content_type_registry(request.registry)
-    template = ct_registry[request.context.meta_type]['display_view_template']
+    template = ct_registry[request.context.__class__]['display_view_template']
+    api = get_template_api(request)
     return render_to_response(template,
-                              get_default_view_bindings(request))
+                              {'api': api, 'context': request.context})
 
 
 def content_add_form(content_type, request, form=None):
@@ -112,7 +109,7 @@ def content_add_form(content_type, request, form=None):
     if form is None:
         form = content_type._get_add_form()
     ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type.meta_type]['label']
+    label = ct_registry[content_type]['label']
     bindings.update(action='add%s' % content_type.meta_type,
                     load_jquery=True,
                     load_editor=True,
@@ -128,13 +125,13 @@ def content_add(content_type, request):
     form.errors['id'] = [u'Invalid id']
     if not form.validate(context):
         ct_registry = get_content_type_registry(request.registry)
-        add_form_view = ct_registry[content_type.meta_type]['add_form_view']
+        add_form_view = ct_registry[content_type]['add_form_view']
         return add_form_view(request, form)
     item = content_type()
     form.populate_obj(item)
     context.add(form.id.data, item)
     ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type.meta_type]['label']
+    label = ct_registry[content_type]['label']
     msg = (u'%s "%s" has been created and you are '
            'now viewing it.' % (label, form.title.data))
     return redirect_to(item.get_url(request), status_message=msg)
@@ -147,7 +144,7 @@ def content_edit_form(request, form=None):
     if form is None:
         form = context._get_edit_form()
     ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type.meta_type]['label']
+    label = ct_registry[content_type]['label']
     bindings.update(action='edit',
                     load_jquery=True,
                     load_editor=True,
@@ -162,8 +159,9 @@ def content_edit(request):
     form = item._get_edit_form(request.POST)
     if not form.validate():
         ct_registry = get_content_type_registry(request.registry)
-        edit_form_view = ct_registry[item.meta_type]['edit_form_view']
+        edit_form_view = ct_registry[item]['edit_form_view']
         return edit_form_view(request, form)
     form.populate_obj(item)
-    msg = (u'Your changes have been saved.')
-    return redirect_to(item.get_url(request), status_message=msg)
+    ## FIXME: configure session
+#    request.session.flash(u'Your changes have been saved.', 'status')
+    return HTTPSeeOther(request.resource_url(item))

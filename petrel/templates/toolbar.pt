@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <link rel="stylesheet" type="text/css" href="${api.static_url('petrel:static/css/toolbar.css')}">
+  <title></title>
+  <base target="_parent"/>
+</head>
+<body>
+<div metal:define-macro="toolbar"
+    id="petrel-toolbar">
+
+  <ol id="petrel-toolbar-breadcrumbs">
+    <li tal:repeat="item api.breadcrumbs[:-1]">
+      <a tal:attributes="href item['url']"
+         tal:content="item['title']"
+         target="_parent"/>
+    </li>
+    <li class="current" tal:content="api.breadcrumbs[-1]['title']"/>
+  </ol>
+
+  <ol id="petrel-toolbar-actions">
+    <li class="button"><a href="edit">edit</a></li>
+    <li class="button">
+      <a href="#FIXME">change status</a>
+    </li>
+    <li class="button">add item</li>
+    <li>
+      <dl class="dropdown">
+        <dt><a href="#">translate into</a></dt>
+        <dd>
+          <ul>
+            <li>english</li>
+          </ul>
+        </dd>
+      </dl>
+    </li>
+    <li>
+      <dl class="dropdown">
+        <dt>actions</dt>
+        <dd>
+          <ul>
+            <li>copy</li>
+            <li>cut</li>
+            <li>paste</li>
+            <li>delete</li>
+          </ul>
+        </dd>
+      </dl>
+    </li>
+  </ol>
+</div>
+
+<script src="${api.static_url('petrel:static/js/jquery.min.js')}"></script>
+<script type="text/javascript">
+  var height = $('#petrel-toolbar').css('height');
+  window.parent.document.getElementById('petrel-toolbar').style.height = height;
+  window.parent.document.body.style.marginTop = height;
+</script>
+
+</body>
+</html>

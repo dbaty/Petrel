@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Lucida Grande", arial, sans-serif;
+    background-color: transparent;
+}
+
+a {
+    text-decoration: none;
+    border: 0;
+}
+
+#petrel-toolbar {
+    width: 100%;
+    background-color: #333333;
+    color: white;
+    font-size: 16px;
+}
+
+#petrel-toolbar a {
+    color: white;
+}
+
+#petrel-toolbar-breadcrumbs {
+    list-style-type: none;
+    margin: 0 0 1em 1em;
+}
+
+#petrel-toolbar-breadcrumbs li {
+    display: inline;
+    padding-right: 0.5em;
+}
+
+#petrel-toolbar-breadcrumbs li:after {
+    content: '\002192';
+}
+
+#petrel-toolbar-breadcrumbs li.current:after {
+    content: '';
+}
+
+#petrel-toolbar-breadcrumbs li a {
+}
+
+#petrel-toolbar-breadcrumbs li a:hover {
+    text-decoration: underline;
+}
+
+#petrel-toolbar-breadcrumbs {
+    list-style-type: none;
+    margin: 0 0 1em 1em;
+}
+
+#petrel-toolbar-actions {
+    margin-left: 1em;
+}
+
+#petrel-toolbar-actions li {
+    display: inline;
+}
+
+#petrel-toolbar-actions .dropdown,
+#petrel-toolbar-actions .dropdown dt,
+#petrel-toolbar-actions .dropdown dd,
+#petrel-toolbar-actions .dropdown ul {
+    display: inline;
+}

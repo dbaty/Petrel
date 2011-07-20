@@ -2,13 +2,16 @@ from zope.interface import Interface
 
 
 class IFolderish(Interface):
-    """Marker interface."""
+    """An item that may contain other items."""
 
 class ICatalogAware(Interface):
-    """Marker interface."""
+    """An item that is cataloged."""
 
 class IContentTypeRegistry(Interface):
-    """Marker interface."""
+    """Petrel content type registry."""
+
+class ITemplateAPI(Interface):
+    """Petrel template API class."""
 
 class IObjectModifiedEvent(Interface):
-    """Sent when an object is modified."""
+    """Event sent when an object is modified."""

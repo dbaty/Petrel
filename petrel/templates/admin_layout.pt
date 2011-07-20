@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+  <title>
+    <metal:title metal:define-slot="title"></metal:title>
+  </title>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+  <link rel="icon" type="image/x-icon"
+        tal:condition="None and 'FIXME'"
+        href="${api.static_url('petrel:static/img/favicon.ico')}"/>
+  <link rel="stylesheet" type="text/css"
+        href="${api.static_url('petrel:static/css/admin.css')}"/>
+  <link rel="stylesheet" type="text/css" href="${api.static_url('petrel:static/css/toolbar.css')}">
+  <script type="text/javascript"
+          tal:condition="python: load_editor or load_jquery"
+          tal:attributes="src api.static_url('petrel:static/js/jquery.min.js')">
+  </script>
+  <tal:wysiwyg-editor tal:condition="load_editor">
+    <script type="text/javascript"
+            tal:attributes="src api.static_url('petrel:static/js/cleditor.min.js')">
+    </script>
+      <link rel="stylesheet" type="text/css"
+            tal:attributes="href api.static_url('petrel:static/css/cleditor.css')"/>
+    <script type="text/javascript">
+      $(document).ready(function() {
+         // FIXME: we could store the name of the HTML fields in 'load_editor'
+        $("#body").cleditor();
+      });
+    </script>
+  </tal:wysiwyg-editor>
+  <!-- FIXME: conditionally load this file. It's needed only for folder listing  -->
+  <script type="text/javascript"
+          tal:attributes="src api.static_url('petrel:static/js/utils.js')"></script>
+  <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->
+</head>
+<body>
+
+  <div metal:use-macro="api.admin_toolbar"></div>
+  <!-- FIXME: include toolbar with use-macro -->
+
+  <div id="header">
+    <a tal:attributes="href api.url(api.site)"
+       tal:content="api.site.title"/> -- ADMIN
+  </div>
+
+  <ol id="navtree"
+      tal:content="structure api.get_nav_tree()">
+  </ol>
+
+  <div id="content">
+    <tal:fixme tal:condition="False and 'FIXME'">
+    <div class="statusMessage"
+         tal:condition="api.status_message"
+         tal:content="api.status_message"/>
+    <div class="errorMessage"
+         tal:condition="api.error_message"
+         tal:content="api.error_message"/>
+    </tal:fixme>
+    <metal:content metal:define-slot="content"/>
+  </div>
+
+  <ol id="footer">
+    <li>
+      <a href="FIXME">search form</a>
+    </li>
+    <li>
+      <a href="FIXME">site map</a>
+    </li>
+  </ol>
+
+</body>
+</html>
