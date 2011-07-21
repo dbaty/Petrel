@@ -4,14 +4,10 @@ from pyramid.httpexceptions import HTTPSeeOther
 from pyramid.renderers import render_to_response
 from pyramid.threadlocal import get_current_registry
 
-from wtforms.fields import TextField
-from wtforms.form import Form
-from wtforms.validators import required
-
 from petrel.catalog import CatalogAware
 from petrel.content.registry import get_content_type_registry
 from petrel.events import ObjectModifiedEvent
-from petrel.views import get_default_view_bindings
+from petrel.views.utils import get_template_api
 
 
 class BaseContent(Persistent, CatalogAware):
@@ -30,8 +26,8 @@ class BaseContent(Persistent, CatalogAware):
             form_class = self.edit_form
             data = {}
             for field in form_class():
-                ## We create a fake form to get its fields. There are
-                ## other ways but this probably is the easiest one.
+                # We create a fake form to get its fields. There are
+                # other ways but this probably is the easiest one.
                 data[field.name] = getattr(self, field.name)
             return form_class(**data)
         return self.edit_form(request_data)
@@ -43,59 +39,14 @@ class BaseContent(Persistent, CatalogAware):
         for attr, value in kwargs.items():
             setattr(self, attr, value)
         if getattr(self, '__parent__', None):
-            ## Notify only if object has been added already.
+            # We may be called when the item is first added. We want
+            # to notify the event only if the item has already been
+            # added.
             registry = get_current_registry()
             registry.notify(ObjectModifiedEvent(self))
 
     def get_addable_types(self, request):
         return ()
-
-
-class BaseForm(Form):
-    def validate(self, context=None):
-        """Validate form.
-
-        ``context`` is to be given **if and only if** this is an add
-        form and we must therefore validate the given id.
-        """
-        success = Form.validate(self)
-        if context:
-            if not context.validate_id(self.id.data):
-                success = False
-                self.id.errors.append(
-                    u'An item with the same id already exists.')
-        return success
-
-
-class BaseContentAddForm(BaseForm):
-    """A base class for all add forms in Petrel."""
-
-    ## FIXME: all TextField and TextAreaField should be sanitized.
-    id = TextField(label=u'Id',
-                   description=u'Should be short, will be part of the URL.',
-                   validators=[required()])
-    title = TextField(label=u'Title', validators=[required()])
-
-    def populate_obj(self, obj):
-        data = self.data
-        self.data.pop('id', None)
-        obj.edit(**data)
-
-
-class BaseContentEditForm:
-    """A mix-in class for all edit forms in Petrel.
-
-    Typically the edit form of a content type derives from its add
-    form (which includes ``id``) and this mix-in (which does not).
-    """
-    id = None
-
-
-## FIXME: move this elsewhere
-from petrel.interfaces import ITemplateAPI
-def get_template_api(request):
-    factory = request.registry.queryUtility(ITemplateAPI)
-    return factory(request)
 
 
 def content_view(request):
@@ -107,17 +58,16 @@ def content_view(request):
 
 
 def content_add_form(content_type, request, form=None):
-    bindings = get_default_view_bindings(request)
     if form is None:
         form = content_type._get_add_form()
     ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type]['label']
-    bindings.update(load_jquery=True,
-                    load_editor=True,
-                    content_type=label,
-                    add_mode=True,
-                    form=form)
-    return bindings
+    return {'api': get_template_api(request),
+            'load_jquery': True,
+            'load_editor': True,
+            'content_type': label,
+            'add_mode': True,
+            'form': form}
 
 
 def content_add(content_type, request):
@@ -142,17 +92,16 @@ def content_add(content_type, request):
 def content_edit_form(request, form=None):
     context = request.context
     content_type = context.__class__
-    bindings = get_default_view_bindings(request)
     if form is None:
         form = context._get_edit_form()
     ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type]['label']
-    bindings.update(load_jquery=True,
-                    load_editor=True,
-                    content_type=label,
-                    add_mode=False,
-                    form=form)
-    return bindings
+    return {'api': get_template_api(request),
+            'load_jquery': True,
+            'load_editor': True,
+            'content_type': label,
+            'add_mode': False,
+            'form': form}
 
 
 def content_edit(request):
@@ -160,6 +109,7 @@ def content_edit(request):
     form = item._get_edit_form(request.POST)
     if not form.validate():
         ct_registry = get_content_type_registry(request.registry)
+        ## FIXME: how can this work?
         edit_form_view = ct_registry[item]['edit_form_view']
         return edit_form_view(request, form)
     form.populate_obj(item)

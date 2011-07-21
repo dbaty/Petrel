@@ -86,7 +86,6 @@ class Folder(BaseFolder, BaseContent):
             self.add(new_name, obj)
         return True
 
-
     def get_addable_types(self, request):
         ct_registry = get_content_type_registry(request.registry)
         return [(ct['label'], '%s_add_form' % meta_type.lower()) \

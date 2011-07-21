@@ -12,8 +12,8 @@ class TestSite(TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
-        from petrel.config import set_default_config
-        set_default_config(self.config)
+        from petrel.config import get_default_config
+        get_default_config(self.config)
 
     def tearDown(self):
         testing.tearDown()
@@ -50,6 +50,7 @@ class TestSite(TestCase):
         got = search_form(req)
         self.assert_(got['results'] is None)
 
+    ## FIXME: move to 'test_search'
     def test_search(self):
         from petrel.content.site import search
         site = self._make_site()
@@ -61,6 +62,7 @@ class TestSite(TestCase):
         self.assertEqual(got['n_results'], 1)
         self.assertEqual([r['path'] for r in got['results']], ['/doc'])
 
+    ## FIXME: move to 'test_search'
     def test_search_empty_request(self):
         from petrel.content.site import search
         req = self._make_request(context=self._make_site(),
