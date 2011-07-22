@@ -7,6 +7,9 @@ class Site(Folder):
     of the web site.
     """
 
+    meta_type = 'Site'
+    label = 'Site' # FIXME: needed?
+
     __parent__ = __name__ = None
 
     def __init__(self):

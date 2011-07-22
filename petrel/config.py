@@ -40,7 +40,6 @@ def _register_content_type(config,
     from petrel.content.base import content_edit
     from petrel.content.base import content_edit_form
     from petrel.content.base import content_view
-    from petrel.views.admin import toolbar
 
     ## FIXME: review these blocks.
     if display_view is None:
@@ -88,9 +87,6 @@ def _register_content_type(config,
                     request_method='POST',
                     view=edit_view,
                     renderer=edit_form_renderer)
-    config.add_view(name='_toolbar.html',
-                    renderer='petrel:templates/toolbar.pt',
-                    view=toolbar)
 
     ## Register the content type in our content type registry.
     ct_registry = get_content_type_registry(config.registry)
@@ -144,9 +140,9 @@ def get_default_config(base_config=None, **settings):
     from petrel.content.folder import folder_rename
     from petrel.content.folder import folder_rename_form
     from petrel.content.site import Site
+    from petrel.views.admin import toolbar
     ## FIXME: look at the new cache_max_age argument
     config.add_static_view(name='static-petrel', path='petrel:static')
-    ## FIXME: we should not define any view template
     config.register_content_type(Site)
     config.register_content_type(Folder)
     config.register_content_type(Document)
@@ -166,6 +162,9 @@ def get_default_config(base_config=None, **settings):
     config.add_view(name='rename',
                     context='petrel.interfaces.IFolderish',
                     view=folder_rename)
+    config.add_view(name='_toolbar.html',
+                    renderer='petrel:templates/toolbar.pt',
+                    view=toolbar)
 
     ## Register default subscribers
     from repoze.folder.interfaces import IObjectAddedEvent
@@ -173,7 +172,6 @@ def get_default_config(base_config=None, **settings):
     from petrel.search import index
     from petrel.search import reindex
     from petrel.search import unindex
-    ## FIXME: why do I use my own event?
     from petrel.interfaces import IObjectModifiedEvent
     config.add_subscriber(index, IObjectAddedEvent)
     config.add_subscriber(reindex, IObjectModifiedEvent)

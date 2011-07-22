@@ -1,17 +1,6 @@
 Todo
 ====
 
-- add tests;
-
-- reorganize API::
-
-  forms.XXX  
-  manage.toolbar (?)
-  content.XXX
-  nav.get_breadcrumbs
-  nav.get_nav_tree
-  utils.TemplateAPI
-
 - add 'file' and 'image' content types
 
 - switch from cleditor to TinyMCE
@@ -39,11 +28,28 @@ Todo
 - add a tab to enter metadata in the edit form: keywords, author,
   language, etc.
 
+- make the 'cancel' button in forms go back to the referrer page (at
+  least when we come from the 'contents' view)
+
+- is the meta_type needed? Should we use it instead of the class
+  itself as the key to the content type registry, as this would
+  simplify the replacement of a content type. On the other hand, to
+  replace a content type, one could simply remove the existing entry
+  and adding a new one under any meta_type, instead of registering
+  under the same meta_type to overwrite the existing one
+
 - protection against CSRF
 
 - implement an error page for 404 errors (?)
 
 - authentication & authorization
+
+- it should be easy to override assets in applications that use Petrel
+  with 'Configurator.override_asset()'
+
+- add more unit/integration tests
+
+- add functional tests
 
 - i18n
 
