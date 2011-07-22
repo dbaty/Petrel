@@ -1,8 +1,3 @@
-"""Test ``content.folder.Folder``.
-
-$Id$
-"""
-
 from unittest import TestCase
 
 from pyramid import testing

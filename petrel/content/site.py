@@ -1,5 +1,3 @@
-"""Define the ``Site`` class."""
-
 from petrel.search import create_catalog_tools
 from petrel.content.folder import Folder
 

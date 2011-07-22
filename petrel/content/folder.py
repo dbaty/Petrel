@@ -1,9 +1,3 @@
-"""Define the Folder content type and everything related to it: forms,
-views, etc.
-
-$Id$
-"""
-
 import re
 
 from pyramid.httpexceptions import HTTPSeeOther
@@ -32,6 +26,7 @@ FORBIDDEN_NAMES = ('folder_add_form', 'document_add_form',
                    'edit_form', 'edit',
                    'search_form', 'search',
                    'sitemap')
+
 
 class FolderAddForm(BaseContentAddForm, ):
     body = TextAreaField(label=u'Body')
@@ -150,7 +145,7 @@ def folder_rename(request):
     try:
         context.rename(names)
     except ValueError:
-        raise ## FIXME: show error message.
+        raise # FIXME: show error message.
     msg = u'Item(s) have been renamed.'
     request.session.flash(msg, 'success')
     return HTTPSeeOther('%scontents' % request.resource_url(context))

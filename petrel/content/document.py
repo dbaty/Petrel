@@ -1,9 +1,3 @@
-"""Define the Document content type and everything related to it:
-forms, views, etc.
-
-$Id$
-"""
-
 from wtforms.fields import TextAreaField
 
 from petrel.content.base import BaseContent

@@ -1,5 +1,3 @@
-"""Search functionalities."""
-
 from pyramid.traversal import find_root
 from pyramid.traversal import model_path
 
@@ -18,10 +16,12 @@ def get_catalog(obj):
     site = find_root(obj)
     return getattr(site, CATALOG_ID)
 
+
 def get_catalog_document_map(obj):
     """Return the document map."""
     site = find_root(obj)
     return getattr(site, CATALOG_DOC_MAP_ID)
+
 
 def create_catalog_tools(site):
     """Create catalog-related tools."""
@@ -31,11 +31,14 @@ def create_catalog_tools(site):
     catalog['path'] = CatalogPathIndex2(_get_path)
     catalog['searchable_text'] = CatalogTextIndex(_get_searchable_text)
 
+
 def _get_path(obj, _unused_default=None):
     return model_path(obj)
 
+
 def _get_searchable_text(obj, _unused_default):
     return obj.get_searchable_text()
+
 
 def _get_all_contained_items_and_itself(obj):
     yield obj
@@ -43,6 +46,7 @@ def _get_all_contained_items_and_itself(obj):
         for item in obj.values():
             for i in _get_all_contained_items_and_itself(item):
                 yield i
+
 
 def search(context, sort_index=None, **criteria):
     """Return a list of metadata for the matching items."""
@@ -105,8 +109,10 @@ class CatalogAware:
 def index(event):
     event.object.index()
 
+
 def reindex(event):
     event.object.reindex()
+
 
 def unindex(event):
     event.object.unindex()

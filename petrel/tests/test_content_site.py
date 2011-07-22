@@ -1,8 +1,3 @@
-"""Test ``content.site.Site``.
-
-$Id$
-"""
-
 from unittest import TestCase
 
 from pyramid import testing

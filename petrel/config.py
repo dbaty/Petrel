@@ -34,10 +34,8 @@ class Configurator(Base):
         if display_view_template is not None:
             entry['display_view_template'] = display_view_template
 
-
-    def registerTemplateAPI(self, factory): ## FIXME: naming
+    def register_template_api(self, factory):
         self.registry.registerUtility(factory, ITemplateAPI)
-
 
     def register_content_type(self,
                               klass,
