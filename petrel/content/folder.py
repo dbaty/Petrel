@@ -1,7 +1,6 @@
 import re
 
 from pyramid.httpexceptions import HTTPSeeOther
-from pyramid.threadlocal import get_current_registry
 
 from repoze.folder import Folder as BaseFolder
 from repoze.folder import unicodify
@@ -53,23 +52,21 @@ class Folder(BaseFolder, BaseContent):
         BaseContent.__init__(self)
         BaseFolder.__init__(self, *args, **kwargs)
 
-    def add(self, name, obj):
+    def add(self, registry, name, obj):
         ## We fire events ourselves because 'repoze.folder' uses the
-        ## global ZCA registry. We use the BFG registry instead.
+        ## global ZCA registry. Here we use Pyramid registry instead.
         res = BaseFolder.add(self, name, obj, send_events=False)
-        registry = get_current_registry()
         registry.notify(ObjectAddedEvent(obj, self, name))
         return res
 
-    def remove(self, name):
+    def remove(self, registry, name):
         ## Cf. add() about firing events ourselves.
         obj = self[name]
-        registry = get_current_registry()
         registry.notify(ObjectWillBeRemovedEvent(obj, self, name))
         res = BaseFolder.remove(self, name, send_events=False)
         return res
 
-    def rename(self, names):
+    def rename(self, registry, names):
         for old_name, new_name in names:
             old_name = unicodify(old_name)
             new_name = unicodify(new_name)
@@ -77,14 +74,9 @@ class Folder(BaseFolder, BaseContent):
                 raise ValueError(
                     u'An item of the same name ("%s") already '
                     'exists.' % new_name)
-            obj = self.remove(old_name)
-            self.add(new_name, obj)
+            obj = self.remove(registry, old_name)
+            self.add(registry, new_name, obj)
         return True
-
-    def get_addable_types(self, request):
-        ct_registry = get_content_type_registry(request.registry)
-        return [(ct['label'], '%s_add_form' % meta_type.lower()) \
-                    for meta_type, ct in ct_registry.items()]
 
     def validate_id(self, obj_id):
         """Validate that ``obj_id`` is a valid id in this folderish
@@ -95,6 +87,11 @@ class Folder(BaseFolder, BaseContent):
         if obj_id in FORBIDDEN_NAMES:
             return False
         return obj_id not in self
+
+    def get_addable_types(self, request):
+        ct_registry = get_content_type_registry(request.registry)
+        return [(ct['label'], 'add_%s' % meta_type.lower()) \
+                    for meta_type, ct in ct_registry.items()]
 
 
 def folder_contents(request):
@@ -112,7 +109,7 @@ def folder_delete(request):
         request.session.flash(msg, 'error')
     else:
         for name in selected:
-            folder.remove(name)
+            folder.remove(request.registry, name)
         msg = u'Item(s) have been deleted.'
         request.session.flash(msg, 'success')
     return HTTPSeeOther('%scontents' % request.resource_url(folder))
@@ -135,7 +132,7 @@ def folder_rename_form(request):
 
 
 def folder_rename(request):
-    context = request.context
+    folder = request.context
     ## FIXME: check that 'name_orig' is valid
     ## FIXME: check that 'name_new' is valid
     names = []
@@ -143,9 +140,9 @@ def folder_rename(request):
         names.append((request.POST.getall('name_orig')[i],
                       request.POST.getall('name_new')[i]))
     try:
-        context.rename(names)
+        folder.rename(request.registry, names)
     except ValueError:
         raise # FIXME: show error message.
     msg = u'Item(s) have been renamed.'
     request.session.flash(msg, 'success')
-    return HTTPSeeOther('%scontents' % request.resource_url(context))
+    return HTTPSeeOther('%scontents' % request.resource_url(folder))

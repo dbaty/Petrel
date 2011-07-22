@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 
 
 def _convert_nav_tree(tree):
@@ -8,7 +8,7 @@ def _convert_nav_tree(tree):
     return converted
 
 
-class TestUtils(unittest.TestCase):
+class TestUtils(TestCase):
 
     def setUp(self):
         from petrel.content.site import Site

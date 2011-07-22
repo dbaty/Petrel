@@ -1,5 +1,5 @@
 from pyramid.traversal import find_root
-from pyramid.traversal import model_path
+from pyramid.traversal import resource_path
 
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.document import DocumentMap
@@ -33,7 +33,7 @@ def create_catalog_tools(site):
 
 
 def _get_path(obj, _unused_default=None):
-    return model_path(obj)
+    return resource_path(obj)
 
 
 def _get_searchable_text(obj, _unused_default):
@@ -50,7 +50,7 @@ def _get_all_contained_items_and_itself(obj):
 
 def search(context, sort_index=None, **criteria):
     """Return a list of metadata for the matching items."""
-    if not criteria:
+    if not any(criteria.values()):
         return ()
     catalog = get_catalog(context)
     results = catalog.search(sort_index=sort_index, **criteria)
@@ -71,13 +71,13 @@ class CatalogAware:
         return dict(title=self.title,
                     icon=self.icon,
                     label=self.label,
-                    path=model_path(self))
+                    path=resource_path(self))
 
     def index(self):
         """Index object in the catalog."""
         for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
-            doc_id = doc_map.add(model_path(item))
+            doc_id = doc_map.add(resource_path(item))
             doc_map.add_metadata(doc_id, item._get_catalog_metadata())
             catalog = get_catalog(item)
             catalog.index_doc(doc_id, item)
@@ -89,7 +89,7 @@ class CatalogAware:
         ## 'repoze.catalog' first.
         for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
-            doc_id = doc_map.docid_for_address(model_path(item))
+            doc_id = doc_map.docid_for_address(resource_path(item))
             doc_map.add_metadata(doc_id, item._get_catalog_metadata())
             catalog = get_catalog(item)
             catalog.reindex_doc(doc_id, item)
@@ -100,7 +100,7 @@ class CatalogAware:
         """
         for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
-            doc_id = doc_map.docid_for_address(model_path(item))
+            doc_id = doc_map.docid_for_address(resource_path(item))
             doc_map.remove_docid(doc_id)
             catalog = get_catalog(item)
             catalog.unindex_doc(doc_id)

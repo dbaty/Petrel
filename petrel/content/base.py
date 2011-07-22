@@ -45,9 +45,6 @@ class BaseContent(Persistent, CatalogAware):
             registry = get_current_registry()
             registry.notify(ObjectModifiedEvent(self))
 
-    def get_addable_types(self, request):
-        return ()
-
 
 def content_view(request):
     ct_registry = get_content_type_registry(request.registry)
@@ -80,7 +77,7 @@ def content_add(content_type, request):
         return add_form_view(request, form)
     item = content_type()
     form.populate_obj(item)
-    context.add(form.id.data, item)
+    context.add(request.registry, form.id.data, item)
     ct_registry = get_content_type_registry(request.registry)
     label = ct_registry[content_type]['label']
     msg = (u'%s "%s" has been created and you are '

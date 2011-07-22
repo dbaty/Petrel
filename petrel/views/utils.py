@@ -1,7 +1,7 @@
 from zope.interface import implements
 
-from pyramid.chameleon_zpt import get_template
 from pyramid.decorator import reify
+from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root
 
 from petrel.interfaces import ITemplateAPI
@@ -21,8 +21,10 @@ class TemplateAPI(object):
         self.context = request.context
         self.site = find_root(request.context)
         ## FIXME: could be reified (?)
-        self.admin_layout = get_template('petrel:templates/admin_layout.pt')
-        self.admin_toolbar = get_template('petrel:templates/toolbar.pt').macros['toolbar']
+        self.admin_layout = get_renderer(
+            'petrel:templates/admin_layout.pt').implementation()
+        self.admin_toolbar = get_renderer(
+            'petrel:templates/toolbar.pt').implementation().macros['toolbar']
         self.context_url = request.resource_url(request.context)
 
     @property
