@@ -5,7 +5,7 @@
   This folder does not contain any items.
 </p>
 
-<form tal:attributes="action '%s/folder_action_handler' % api.context_url"
+<form tal:attributes="action '%sfolder_action_handler' % api.context_url"
       tal:condition="items"
       method="post">
   <table class="listing">

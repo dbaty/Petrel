@@ -18,6 +18,7 @@ class TemplateAPI(object):
 
     def __init__(self, request):
         self.request = request
+        self.context = request.context
         self.site = find_root(request.context)
         ## FIXME: could be reified (?)
         self.admin_layout = get_template('petrel:templates/admin_layout.pt')

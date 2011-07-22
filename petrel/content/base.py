@@ -4,7 +4,7 @@ from pyramid.httpexceptions import HTTPSeeOther
 from pyramid.renderers import render_to_response
 from pyramid.threadlocal import get_current_registry
 
-from petrel.catalog import CatalogAware
+from petrel.search import CatalogAware
 from petrel.content.registry import get_content_type_registry
 from petrel.events import ObjectModifiedEvent
 from petrel.views.utils import get_template_api

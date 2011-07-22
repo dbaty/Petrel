@@ -13,34 +13,37 @@ CATALOG_ID = '_catalog'
 CATALOG_DOC_MAP_ID = '_catalog_doc_map'
 
 
-def create_catalog_tools(site):
-    setattr(site, CATALOG_ID, Catalog())
-    setattr(site, CATALOG_DOC_MAP_ID, DocumentMap())
-    catalog = getattr(site, CATALOG_ID)
-    def get_path(obj, _unused_default=None):
-        return model_path(obj)
-    catalog['path'] = CatalogPathIndex2(get_path)
-    def get_searchable_text(obj, _unused_default):
-        return obj.get_searchable_text()
-    catalog['searchable_text'] = CatalogTextIndex(get_searchable_text)
-
-def get_catalog_document_map(obj):
-    site = find_root(obj)
-    return getattr(site, CATALOG_DOC_MAP_ID)
-
 def get_catalog(obj):
+    """Return the catalog."""
     site = find_root(obj)
     return getattr(site, CATALOG_ID)
 
-def get_all_contained_items_and_itself(self):
-    if getattr(self, 'values', None):
-        for item in self.values():
-            get_all_contained_items_and_itself(item)
-            yield item ## FIXME: really needed?
-    yield self
+def get_catalog_document_map(obj):
+    """Return the document map."""
+    site = find_root(obj)
+    return getattr(site, CATALOG_DOC_MAP_ID)
 
-## FIXME: just provide a utility function to be called by a view in
-## the application.
+def create_catalog_tools(site):
+    """Create catalog-related tools."""
+    setattr(site, CATALOG_ID, Catalog())
+    setattr(site, CATALOG_DOC_MAP_ID, DocumentMap())
+    catalog = getattr(site, CATALOG_ID)
+    catalog['path'] = CatalogPathIndex2(_get_path)
+    catalog['searchable_text'] = CatalogTextIndex(_get_searchable_text)
+
+def _get_path(obj, _unused_default=None):
+    return model_path(obj)
+
+def _get_searchable_text(obj, _unused_default):
+    return obj.get_searchable_text()
+
+def _get_all_contained_items_and_itself(obj):
+    yield obj
+    if getattr(obj, 'values', None):
+        for item in obj.values():
+            for i in _get_all_contained_items_and_itself(item):
+                yield i
+
 def search(context, sort_index=None, **criteria):
     """Return a list of metadata for the matching items."""
     if not criteria:
@@ -68,7 +71,7 @@ class CatalogAware:
 
     def index(self):
         """Index object in the catalog."""
-        for item in get_all_contained_items_and_itself(self):
+        for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
             doc_id = doc_map.add(model_path(item))
             doc_map.add_metadata(doc_id, item._get_catalog_metadata())
@@ -80,7 +83,7 @@ class CatalogAware:
         ## FIXME: would be nice to be able to reindex only specific
         ## indexes. This would need to be implemented in
         ## 'repoze.catalog' first.
-        for item in get_all_contained_items_and_itself(self):
+        for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
             doc_id = doc_map.docid_for_address(model_path(item))
             doc_map.add_metadata(doc_id, item._get_catalog_metadata())
@@ -91,7 +94,7 @@ class CatalogAware:
         """Remove references to this object from the catalog and
         propagate to contained items as well.
         """
-        for item in get_all_contained_items_and_itself(self):
+        for item in _get_all_contained_items_and_itself(self):
             doc_map = get_catalog_document_map(item)
             doc_id = doc_map.docid_for_address(model_path(item))
             doc_map.remove_docid(doc_id)

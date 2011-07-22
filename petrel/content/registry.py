@@ -8,7 +8,9 @@ class ContentTypeRegistry(dict):
 
 
 def get_content_type_registry(pyramid_registry):
-    """Return Petrel content type registry."""
+    """Return Petrel content type registry (creating it if does not
+    exist yet).
+    """
     reg = pyramid_registry.queryUtility(IContentTypeRegistry, default=None)
     if reg is None:
         reg = ContentTypeRegistry()

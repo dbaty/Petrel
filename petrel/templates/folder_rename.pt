@@ -1,4 +1,4 @@
-<metal:layout metal:use-macro="api.layout">
+<metal:layout metal:use-macro="api.admin_layout">
 <metal:content metal:fill-slot="content">
 
 <h1>Rename items&hellip;</h1>
@@ -8,7 +8,7 @@
        tal:repeat="item items">
     <label class="required">
       Id for "<em tal:content="item['title']"/>"
-      <img tal:attributes="src api.static_url('static/img/required.png')"
+      <img tal:attributes="src api.static_url('petrel:static/img/required.png')"
            width="4" height="4" alt="(required)"/>
     </label>
     <input type="hidden" name="name_orig" tal:attributes="value item['id']"/>
@@ -17,10 +17,10 @@
 
   <div class="buttons">
     <button type="submit" class="positive">
-      <img tal:attributes="src api.static_url('static/img/tick.png')" alt=""/>
+      <img tal:attributes="src api.static_url('petrel:static/img/tick.png')" alt=""/>
       Rename
     </button>
-    <a tal:attributes="href context_url">Cancel</a>
+    <a tal:attributes="href api.context_url">Cancel</a>
   </div>
 </form>
 

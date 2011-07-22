@@ -8,45 +8,51 @@
 </head>
 <body>
 <div metal:define-macro="toolbar"
-    id="petrel-toolbar">
+    id="petrel-toolbar"
+     tal:define="breadcrumbs api.get_breadcrumbs()">
 
   <ol id="petrel-toolbar-breadcrumbs">
-    <li tal:repeat="item api.breadcrumbs[:-1]">
+    <li tal:repeat="item breadcrumbs[:-1]">
       <a tal:attributes="href item['url']"
          tal:content="item['title']"
          target="_parent"/>
     </li>
-    <li class="current" tal:content="api.breadcrumbs[-1]['title']"/>
+    <li class="current" tal:content="breadcrumbs[-1]['title']"/>
   </ol>
 
   <ol id="petrel-toolbar-actions">
     <li class="button"><a href="edit">edit</a></li>
     <li class="button">
-      <a href="#FIXME">change status</a>
+      <a class="dropdown-controller" href="#FIXME">change status</a>
+      <ul class="dropdown">
+        <li><a href="publish">publish</a></li>
+      </ul>
     </li>
-    <li class="button">add item</li>
-    <li>
-      <dl class="dropdown">
-        <dt><a href="#">translate into</a></dt>
-        <dd>
-          <ul>
-            <li>english</li>
-          </ul>
-        </dd>
-      </dl>
+    <li class="button">
+      <a class="dropdown-controller" href="#FIXME">actions</a>
+      <ul class="dropdown">
+        <li><a href="#FIXME">copy</a></li>
+        <li><a href="#FIXME">cut</a></li>
+        <li><a href="#FIXME">paste</a></li>
+        <li><a href="#FIXME">delete</a></li>
+      </ul>
     </li>
-    <li>
-      <dl class="dropdown">
-        <dt>actions</dt>
-        <dd>
-          <ul>
-            <li>copy</li>
-            <li>cut</li>
-            <li>paste</li>
-            <li>delete</li>
-          </ul>
-        </dd>
-      </dl>
+    <li class="button">
+      <a class="dropdown-controller" href="#FIXME">translate into</a>
+      <ul class="dropdown">
+        <li><a href="publish">English</a></li>
+      </ul>
+    </li>
+    <li tal:condition="api.context.is_folderish"
+        class="button">
+      <a href="contents">contents</a>
+    </li>
+    <li class="button">
+      <a class="dropdown-controller" href="#FIXME">add item</a>
+      <ul class="dropdown">
+        <li><a href="add_document">Document</a></li>
+        <li><a href="add_folder">Folder</a></li>
+      </ul>
     </li>
   </ol>
 

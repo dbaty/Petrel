@@ -10,9 +10,16 @@ tmp_src_dir = $(tmp_dir)/src
 tmp_cov_dir = $(tmp_dir)/coverage-output
 tmp_env_dir = $(tmp_dir)/testing-env
 
+.PHONY: clean
+clean:
+	rm -rf .coverage
+	rm -rf ./dist/
+	rm -rf $(tmp_dir)
+	find . -name "*.pyc" | xargs rm
+
 .PHONY: coverage
 coverage:
-	coverage run setup.py nosetests
+	PYTHONWARNINGS=all coverage run setup.py nosetests
 	coverage html -d "$(tmp_cov_dir)"
 	open "$(tmp_cov_dir)/index.html"
 	@echo "Coverage information is available at '$(tmp_cov_dir)'."
@@ -37,13 +44,10 @@ distcheck: clean dist
 		$(tmp_env_dir)/bin/python setup.py install && \
 		$(tmp_env_dir)/bin/nosetests
 
+.PHONY: test
+test:
+	PYTHONWARNINGS=all nosetests
+
 .PHONY: upload
 upload:
 	python setup.py sdist upload
-
-.PHONY: clean
-clean:
-	rm -rf .coverage
-	rm -rf ./dist/
-	rm -rf $(tmp_dir)
-	find . -name "*.pyc" | xargs rm

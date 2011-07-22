@@ -16,4 +16,4 @@ class Site(Folder):
         create_catalog_tools(self)
         self.title = u'Site'
         self.description = u'A site.'
-        self.index() # for 'utils.get_nav_tree()' to work properly
+        self.index() # for 'utils.get_nav_tree()' to work properly ## FIXME: really?

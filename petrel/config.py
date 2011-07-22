@@ -56,7 +56,7 @@ class Configurator(Base):
         from petrel.content.base import content_edit
         from petrel.content.base import content_edit_form
         from petrel.content.base import content_view
-        from petrel.views import toolbar
+        from petrel.views.admin import toolbar
 
         ## FIXME: review these blocks.
         if display_view is None:
@@ -141,6 +141,9 @@ def get_default_config(base_config=None, **settings):
     from petrel.content.document import Document
     from petrel.content.folder import Folder
     from petrel.content.folder import folder_contents
+    from petrel.content.folder import folder_delete
+    from petrel.content.folder import folder_rename
+    from petrel.content.folder import folder_rename_form
     from petrel.content.site import Site
     ## FIXME: look at the new cache_max_age argument
     config.add_static_view(name='static-petrel', path='petrel:static')
@@ -152,26 +155,25 @@ def get_default_config(base_config=None, **settings):
                     context=IFolderish,
                     view=folder_contents,
                     renderer='templates/folder_contents.pt')
-    ## FIXME: folder actions are missing (delete, rename, etc.)
-#   <view context=".interfaces.IFolderish"
-#         name="folder_action_handler"
-#         request_param="action=delete"
-#         view=".content.folder.folder_delete"/>
-#   <view context=".interfaces.IFolderish"
-#         name="folder_action_handler"
-#         request_param="action=rename"
-#         view=".content.folder.folder_rename_form"
-#         renderer="templates/folder_rename.pt"/>
-#   <view context=".interfaces.IFolderish"
-#         name="rename"
-#         view=".content.folder.folder_rename"/>
+    config.add_view(name='folder_action_handler',
+                    context='.interfaces.IFolderish',
+                    request_param="action=delete",
+                    view=folder_delete)
+    config.add_view(name='folder_action_handler',
+                    context='.interfaces.IFolderish',
+                    request_param='action=rename',
+                    view=folder_rename_form,
+                    renderer='templates/folder_rename.pt')
+    config.add_view(name='rename',
+                    context='.interfaces.IFolderish',
+                    view=folder_rename)
 
     ## Register default subscribers
     from repoze.folder.interfaces import IObjectAddedEvent
     from repoze.folder.interfaces import IObjectWillBeRemovedEvent
-    from petrel.catalog import index
-    from petrel.catalog import reindex
-    from petrel.catalog import unindex
+    from petrel.search import index
+    from petrel.search import reindex
+    from petrel.search import unindex
     ## FIXME: why do I use my own event?
     from petrel.interfaces import IObjectModifiedEvent
     config.add_subscriber(index, IObjectAddedEvent)

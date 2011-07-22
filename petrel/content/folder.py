@@ -6,6 +6,7 @@ $Id$
 
 import re
 
+from pyramid.httpexceptions import HTTPSeeOther
 from pyramid.threadlocal import get_current_registry
 
 from repoze.folder import Folder as BaseFolder
@@ -18,12 +19,11 @@ from wtforms.fields import TextAreaField
 from zope.interface import implements
 
 from petrel.content.base import BaseContent
-from petrel.content.base import BaseContentAddForm
-from petrel.content.base import BaseContentEditForm
-from petrel.content.base import get_template_api
 from petrel.content.registry import get_content_type_registry
+from petrel.forms import BaseContentAddForm
+from petrel.forms import BaseContentEditForm
 from petrel.interfaces import IFolderish
-from petrel.views import get_default_view_bindings
+from petrel.views.utils import get_template_api
 
 
 ALLOWED_NAME = re.compile('^[a-zA-Z0-9]+[\w.-]*$')
@@ -111,19 +111,32 @@ def folder_contents(request):
 
 def folder_delete(request):
     folder = request.context
-    for name in request.POST.getall('selected'):
-        folder.remove(name)
-    msg = u'Item(s) have been deleted.'
-    return redirect_to(folder.get_url(request), status_message=msg)
+    selected = request.POST.getall('selected')
+    if not selected:
+        msg = u'No items were selected.'
+        request.session.flash(msg, 'error')
+    else:
+        for name in selected:
+            folder.remove(name)
+        msg = u'Item(s) have been deleted.'
+        request.session.flash(msg, 'success')
+    return HTTPSeeOther('%scontents' % request.resource_url(folder))
 
 
 def folder_rename_form(request):
-    bindings = get_default_view_bindings(request)
+    folder = request.context
     names = request.POST.getall('selected')
-    bindings.update(items=[{'id': name,
-                            'title': request.context[name].title} \
-                               for name in names])
-    return bindings
+    if not names:
+        msg = u'No items were selected.'
+        request.session.flash(msg, 'error')
+        return HTTPSeeOther('%scontents' % request.resource_url(folder))
+    items = [{'id': name,
+              'title': folder[name].title} \
+                 for name in names]
+    return {'api': get_template_api(request),
+            'items': items,
+            'load_jquery': False,
+            'load_editor': False}
 
 
 def folder_rename(request):
@@ -139,4 +152,5 @@ def folder_rename(request):
     except ValueError:
         raise ## FIXME: show error message.
     msg = u'Item(s) have been renamed.'
-    return redirect_to(context.get_url(request), status_message=msg)
+    request.session.flash(msg, 'success')
+    return HTTPSeeOther('%scontents' % request.resource_url(context))
