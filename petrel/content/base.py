@@ -45,6 +45,12 @@ class BaseContent(Persistent, CatalogAware):
             registry = get_current_registry()
             registry.notify(ObjectModifiedEvent(self))
 
+    def get_icon(self, request):
+        """Return icon and alternate text that correspond to the
+        content type.
+        """
+        return request.static_url(self.icon), self.label
+
 
 def content_view(request):
     ct_registry = get_content_type_registry(request.registry)

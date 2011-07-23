@@ -17,7 +17,7 @@ class Document(BaseContent):
 
     meta_type = 'Document'
     label = u'Document'
-    icon = 'petrel:static/img/document.gif'
+    icon = 'petrel:static/img/type_document.png'
 
     add_form = DocumentAddForm
     edit_form = DocumentEditForm

@@ -41,7 +41,7 @@ class Folder(BaseFolder, BaseContent):
     meta_type = 'Folder'
     label = 'Folder'
     is_folderish = True
-    icon = 'petrel:static/img/folder.gif'
+    icon = 'petrel:static/img/type_folder.png'
 
     body = u''
 

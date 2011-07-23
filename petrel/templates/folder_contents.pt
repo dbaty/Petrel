@@ -26,8 +26,8 @@
                  tal:attributes="value item.__name__"/>
         </td>
         <td class="centered">
-          <img tal:attributes="src api.static_url(item.icon);
-                               alt context.label"
+          <img tal:define="(icon, label) item.get_icon(api.request)"
+               src="${icon}" alt="${label}" title="${label}"
                width="16" height="16"/>
         </td>
         <td>

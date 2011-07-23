@@ -134,6 +134,7 @@ def get_default_config(base_config=None, **settings):
 
     ## Register default content types
     from petrel.content.document import Document
+    from petrel.content.file import File
     from petrel.content.folder import Folder
     from petrel.content.folder import folder_contents
     from petrel.content.folder import folder_delete
@@ -146,6 +147,7 @@ def get_default_config(base_config=None, **settings):
     config.register_content_type(Site)
     config.register_content_type(Folder)
     config.register_content_type(Document)
+    config.register_content_type(File) # FIXME: we need extra views!
     config.add_view(name='contents',
                     context=IFolderish,
                     view=folder_contents,

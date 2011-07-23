@@ -108,12 +108,12 @@ class TestSearch(TestCase):
         site = self._make_site()
         doc = self._make_document(site, 'doc')
         doc.edit(title='Document')
-        res = self._call_fut(context=site, searchable_text= u'document')
+        res = self._call_fut(context=site, searchable_text=u'document')
         self.assertEqual([r['path'] for r in res], ['/doc'])
 
     def test_search_empty_request(self):
         site = self._make_site()
         doc = self._make_document(site, 'doc')
         doc.edit(title='Document')
-        res = self._call_fut(context=site, searchable_text= u'')
+        res = self._call_fut(context=site, searchable_text=u'')
         self.assertEqual(res, ())

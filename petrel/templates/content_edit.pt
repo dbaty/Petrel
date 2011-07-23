@@ -7,7 +7,8 @@
 </h1>
 
 <form tal:attributes="action api.request.url"
-      method="post">
+      method="post"
+      enctype="multipart/form-data">
   <div class="formRow"
        tal:repeat="field form">
     <label tal:attributes="for field.id;
