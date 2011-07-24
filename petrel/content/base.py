@@ -16,6 +16,7 @@ class BaseContent(Persistent, CatalogAware):
 
     title = u''
     description = u''
+    template = u'default'
 
     @classmethod
     def _get_add_form(cls, *args, **kwargs):
@@ -52,9 +53,23 @@ class BaseContent(Persistent, CatalogAware):
         return request.static_url(self.icon), self.label
 
 
+def _get_display_template(ct_registry, context):
+    for template_info in ct_registry[context.__class__]['display_templates']:
+        if template_info['id'] == context.template:
+            return template_info['template']
+    return None
+
+
 def content_view(request):
     ct_registry = get_content_type_registry(request.registry)
-    template = ct_registry[request.context.__class__]['display_view_template']
+    klass = request.context.__class__
+    templates = ct_registry[klass]['display_templates']
+    if not templates:
+        raise ValueError('The default display view is used for the %s '
+                         'content type but no template has been '
+                         'provided. It must be customized.' % klass.label)
+    template = _get_display_template(
+            ct_registry, request.context)
     api = get_template_api(request)
     return render_to_response(template,
                               {'api': api, 'context': request.context})
@@ -63,8 +78,7 @@ def content_view(request):
 def content_add_form(content_type, request, form=None):
     if form is None:
         form = content_type._get_add_form()
-    ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type]['label']
+    label = content_type.label
     return {'api': get_template_api(request),
             'load_jquery': True,
             'load_editor': True,
@@ -84,8 +98,7 @@ def content_add(content_type, request):
     item = content_type()
     form.populate_obj(item)
     context.add(request.registry, form.id.data, item)
-    ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type]['label']
+    label = content_type.label
     msg = (u'%s "%s" has been created and you are '
            'now viewing it.' % (label, form.title.data))
     request.session.flash(msg, 'success')
@@ -97,8 +110,7 @@ def content_edit_form(request, form=None):
     content_type = context.__class__
     if form is None:
         form = context._get_edit_form()
-    ct_registry = get_content_type_registry(request.registry)
-    label = ct_registry[content_type]['label']
+    label = content_type.label
     return {'api': get_template_api(request),
             'load_jquery': True,
             'load_editor': True,

@@ -26,13 +26,13 @@ def _register_template_api(config, factory):
 
 def _register_content_type(config,
                            klass,
-                           display_view_template=None,
                            display_view=None,
+                           display_templates=None,
                            add_form_view=None,
-                           add_form_template=None,
+                           add_template=None,
                            add_view=None,
                            edit_form_view=None,
-                           edit_form_template=None,
+                           edit_template=None,
                            edit_view=None):
     """FIXME: document args"""
     from petrel.content.base import content_add
@@ -41,71 +41,63 @@ def _register_content_type(config,
     from petrel.content.base import content_edit_form
     from petrel.content.base import content_view
 
-    ## FIXME: review these blocks.
+    ## Default views
     if display_view is None:
         display_view = content_view
-        if display_view_template is None:
-            display_view_template = '-- this template should have been customized--' ## FIXME: really?
+        if display_templates is None:
+            display_templates = {}
     if add_form_view is None:
         add_form_view = lambda request, form=None: content_add_form(
             klass, request, form)
-        if add_form_template is None:
-            add_form_renderer = 'templates/content_edit.pt'
+        if add_template is None:
+            add_template = 'templates/content_edit.pt'
     if add_view is None:
         add_view = lambda request: content_add(klass, request)
     if edit_form_view is None:
         edit_form_view = content_edit_form
-        if edit_form_template is None:
-            edit_form_renderer = 'templates/content_edit.pt'
+        if edit_template is None:
+            edit_template = 'templates/content_edit.pt'
     if edit_view is None:
         edit_view = content_edit
 
     ## Register views
-    ## FIXME: check that we still need all this.
     ## The 'renderer' attribute below is needed when the view has
     ## to redisplay the add form.
     config.add_view(name='add_%s' % klass.meta_type.lower(),
                     context=IFolderish,
                     request_method='POST',
                     view=add_view,
-                    renderer=add_form_renderer)
+                    renderer=add_template)
     config.add_view(name='add_%s' % klass.meta_type.lower(),
                     context=IFolderish,
                     view=add_form_view,
-                    renderer=add_form_renderer)
+                    renderer=add_template)
     config.add_view(context=klass,
-                    view=display_view,
-                    renderer=display_view_template)
+                    view=display_view)
     config.add_view(name='edit',
                     context=klass,
                     view=edit_form_view,
-                    renderer=edit_form_renderer)
+                    renderer=edit_template)
     ## The 'renderer' attribute below is needed when the view has
     ## to redisplay the edit form.
     config.add_view(name='edit',
                     context=klass,
                     request_method='POST',
                     view=edit_view,
-                    renderer=edit_form_renderer)
+                    renderer=edit_template)
 
     ## Register the content type in our content type registry.
     ct_registry = get_content_type_registry(config.registry)
     ct_registry[klass] = dict(
-        label=klass.label,
         add_form_view=add_form_view,
         edit_form_view=edit_form_view,
-        display_view_template=display_view_template)
+        display_templates=display_templates)
 
 
-def _customize_content_type(config, klass,
-                            display_view=None,
-                            display_view_template=None):
+def _customize_content_type(config, klass, **kwargs):
     registry = config.registry.queryUtility(IContentTypeRegistry)
     entry = registry[klass]
-    if display_view_template is not None:
-        entry['display_view'] = display_view
-    if display_view_template is not None:
-        entry['display_view_template'] = display_view_template
+    entry.update(kwargs)
 
 
 ## FIXME: the name of the method does not sound right.
