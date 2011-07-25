@@ -34,13 +34,11 @@ class TestFolder(TestCase):
         return DummyRequest(context, post=post)
 
     def test_validate_id(self):
-        from petrel.content.folder import FORBIDDEN_NAMES
         folder = self._make_folder(self._make_site(), 'folder')
         self._make_document(folder, 'doc1')
-        allowed = ('doc2', 'foo', 'foo_bar', 'foo-bar.baz')
+        allowed = ('doc2', 'foo', 'foo_bar', 'foo-bar.baz', 'edit')
         forbidden = ('_foo', '-foo', '.foo', '@foo', 'a/b',
                      'a?', u'\xe9', 'doc1')
-        forbidden += FORBIDDEN_NAMES
         for name in allowed:
             self.assert_(folder.validate_id(name),
                          '%s should be allowed' % name)
