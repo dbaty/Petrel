@@ -20,11 +20,6 @@ from petrel.views.utils import get_template_api
 
 
 ALLOWED_NAME = re.compile('^[a-zA-Z0-9]+[\w.-]*$')
-FORBIDDEN_NAMES = ('folder_add_form', 'document_add_form',
-                   'addFolder', 'addDocument',
-                   'edit_form', 'edit',
-                   'search_form', 'search',
-                   'sitemap')
 
 
 class FolderAddForm(BaseContentAddForm, ):
@@ -84,14 +79,21 @@ class Folder(BaseFolder, BaseContent):
         """
         if not ALLOWED_NAME.match(obj_id):
             return False
-        if obj_id in FORBIDDEN_NAMES:
-            return False
         return obj_id not in self
 
     def get_addable_types(self, request):
+        """Return content types that can be added as a list of
+        dictionaries that contain the label of the content type and
+        the view name of the add form.
+        """
         ct_registry = get_content_type_registry(request.registry)
-        return [(ct['label'], 'add_%s' % meta_type.lower()) \
-                    for meta_type, ct in ct_registry.items()]
+        types = []
+        for klass, info in ct_registry.items():
+            if not info['addable']:
+                continue
+            types.append({'label': klass.label,
+                          'form': 'add_%s' % klass.meta_type.lower()})
+        return sorted(types, key=lambda x: x['label'])
 
 
 def folder_contents(request):

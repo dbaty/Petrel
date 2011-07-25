@@ -52,6 +52,9 @@ class BaseContent(Persistent, CatalogAware):
         """
         return request.static_url(self.icon), self.label
 
+    def get_addable_types(self, request):
+        return ()
+
 
 def _get_display_template(ct_registry, context):
     for template_info in ct_registry[context.__class__]['display_templates']:
@@ -102,7 +105,8 @@ def content_add(content_type, request):
     msg = (u'%s "%s" has been created and you are '
            'now viewing it.' % (label, form.title.data))
     request.session.flash(msg, 'success')
-    return HTTPSeeOther(request.resource_url(item))
+    location = request.resource_url(item) + getattr(item, 'admin_view_path', '')
+    return HTTPSeeOther(location)
 
 
 def content_edit_form(request, form=None):
@@ -129,4 +133,5 @@ def content_edit(request):
         return edit_form_view(request, form)
     form.populate_obj(item)
     request.session.flash(u'Your changes have been saved.', 'success')
-    return HTTPSeeOther(request.resource_url(item))
+    location = request.resource_url(item) + getattr(item, 'admin_view_path', '')
+    return HTTPSeeOther(location)

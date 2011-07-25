@@ -61,12 +61,14 @@ class TemplateAPI(object):
                '  height: 0;'
                '}'
                '</style>')
+        url = '%s_toolbar.html' % self.request.resource_url(
+            self.request.context)
         js = ('<script type="text/javascript">'
               'var iframe = document.createElement("iframe");'
               'iframe.id = "petrel-toolbar";'
-              'iframe.src = "%s/_toolbar.html";'
+              'iframe.src = "%s";'
               'document.body.insertBefore(iframe, document.body.firstChild);'
-              '</script>' % self.request.url.strip('/'))
+              '</script>' % url)
         return ''.join((css, js))
 
     def get_nav_tree(self):

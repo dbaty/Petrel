@@ -47,11 +47,15 @@
         class="button">
       <a href="contents">contents</a>
     </li>
-    <li class="button">
+    <li class="button"
+        tal:define="addable_types api.context.get_addable_types(request)"
+        tal:condition="addable_types">
       <a class="dropdown-controller" href="#FIXME">add item</a>
       <ul class="dropdown">
-        <li><a href="add_document">Document</a></li>
-        <li><a href="add_folder">Folder</a></li>
+        <li tal:repeat="addable_type addable_types">
+          <a href="${addable_type['form']}"
+             tal:content="addable_type['label']"/>
+        </li>
       </ul>
     </li>
   </ol>

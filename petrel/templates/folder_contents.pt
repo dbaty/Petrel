@@ -31,7 +31,8 @@
                width="16" height="16"/>
         </td>
         <td>
-          <a tal:attributes="href api.context_url + item.__name__"
+          <a tal:attributes="href '/'.join((api.context_url + item.__name__,
+                                         getattr(item, 'admin_view_path', '')))"
              tal:content="item.title"/>
           <a class="folder-contents"
              tal:condition="item.is_folderish"

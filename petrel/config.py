@@ -26,14 +26,16 @@ def _register_template_api(config, factory):
 
 def _register_content_type(config,
                            klass,
+                           addable=True,
                            display_view=None,
-                           display_templates=None,
+                           display_templates=(),
                            add_form_view=None,
                            add_template=None,
                            add_view=None,
                            edit_form_view=None,
                            edit_template=None,
-                           edit_view=None):
+                           edit_view=None,
+                           extra_views=()):
     """FIXME: document args"""
     from petrel.content.base import content_add
     from petrel.content.base import content_add_form
@@ -45,7 +47,7 @@ def _register_content_type(config,
     if display_view is None:
         display_view = content_view
         if display_templates is None:
-            display_templates = {}
+            display_templates = ()
     if add_form_view is None:
         add_form_view = lambda request, form=None: content_add_form(
             klass, request, form)
@@ -61,17 +63,18 @@ def _register_content_type(config,
         edit_view = content_edit
 
     ## Register views
-    ## The 'renderer' attribute below is needed when the view has
-    ## to redisplay the add form.
-    config.add_view(name='add_%s' % klass.meta_type.lower(),
-                    context=IFolderish,
-                    request_method='POST',
-                    view=add_view,
-                    renderer=add_template)
-    config.add_view(name='add_%s' % klass.meta_type.lower(),
-                    context=IFolderish,
-                    view=add_form_view,
-                    renderer=add_template)
+    if addable:
+        ## The 'renderer' attribute below is needed when the view has
+        ## to redisplay the add form.
+        config.add_view(name='add_%s' % klass.meta_type.lower(),
+                        context=IFolderish,
+                        request_method='POST',
+                        view=add_view,
+                        renderer=add_template)
+        config.add_view(name='add_%s' % klass.meta_type.lower(),
+                        context=IFolderish,
+                        view=add_form_view,
+                        renderer=add_template)
     config.add_view(context=klass,
                     view=display_view)
     config.add_view(name='edit',
@@ -85,10 +88,13 @@ def _register_content_type(config,
                     request_method='POST',
                     view=edit_view,
                     renderer=edit_template)
+    for extra_view in extra_views:
+        config.add_view(**extra_view)
 
     ## Register the content type in our content type registry.
     ct_registry = get_content_type_registry(config.registry)
     ct_registry[klass] = dict(
+        addable=addable,
         add_form_view=add_form_view,
         edit_form_view=edit_form_view,
         display_templates=display_templates)
@@ -97,7 +103,10 @@ def _register_content_type(config,
 def _customize_content_type(config, klass, **kwargs):
     registry = config.registry.queryUtility(IContentTypeRegistry)
     entry = registry[klass]
+    extra_views = kwargs.pop('extra_views', ())
     entry.update(kwargs)
+    for extra_view in extra_views:
+        config.add_view(**extra_view)
 
 
 ## FIXME: the name of the method does not sound right.
@@ -127,19 +136,26 @@ def get_default_config(base_config=None, **settings):
     ## Register default content types
     from petrel.content.document import Document
     from petrel.content.file import File
+    from petrel.content.file import file_download
     from petrel.content.folder import Folder
     from petrel.content.folder import folder_contents
     from petrel.content.folder import folder_delete
     from petrel.content.folder import folder_rename
     from petrel.content.folder import folder_rename_form
+    from petrel.content.image import Image
     from petrel.content.site import Site
     from petrel.views.admin import toolbar
     ## FIXME: look at the new cache_max_age argument
     config.add_static_view(name='static-petrel', path='petrel:static')
-    config.register_content_type(Site)
-    config.register_content_type(Folder)
+    config.register_content_type(Site, addable=False)
     config.register_content_type(Document)
-    config.register_content_type(File) # FIXME: we need extra views!
+    config.register_content_type(
+        File,
+        display_view=file_download)
+    config.register_content_type(
+        Image,
+        display_view=file_download)
+    config.register_content_type(Folder)
     config.add_view(name='contents',
                     context=IFolderish,
                     view=folder_contents,

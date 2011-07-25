@@ -1,3 +1,5 @@
+from pyramid.response import Response
+
 from wtforms.fields import FileField
 
 from ZODB.blob import Blob
@@ -5,6 +7,8 @@ from ZODB.blob import Blob
 from petrel.content.base import BaseContent
 from petrel.forms import BaseContentAddForm
 from petrel.forms import BaseContentEditForm
+from petrel.views.utils import get_template_api
+
 
 ## FIXME: add missing mime types
 ICONS = {'application/pdf': ('PDF', 'mime_pdf.png'),
@@ -27,7 +31,7 @@ class FileAddForm(BaseContentAddForm):
 
 
 # FIXME: we need a better edit form that proposes to keep the current
-# file instead of forcing to re-upload it.
+# file instead of forcing the user to re-upload it.
 class FileEditForm(BaseContentEditForm, FileAddForm):
     pass
 
@@ -36,7 +40,7 @@ class File(BaseContent):
 
     meta_type = 'File'
     label = 'File'
-    icon = 'petrel:static/img/type_file.png'
+    admin_view_path = '@@info'
     file = '' # FIXME: temporary while we fix the edit form
 
     add_form = FileAddForm
@@ -72,3 +76,30 @@ def upload_stream(stream, file):
         size += len(data)
         file.write(data)
     return size
+
+
+def pretty_size(size):
+    """Return a human-readable version of the give ``size``."""
+    if size == 0:
+        return '0 KB'
+    if size <= 1024:
+        return '1 KB'
+    if size > 1048576:
+        return '%0.02f MB' % (size / 1048576.0)
+    return '%0.02f KB' % (size / 1024.0)
+
+
+def file_info(request):
+    api = get_template_api(request)
+    return {'api': api,
+            'context': request.context,
+            'size': pretty_size(request.context.size),
+            'load_jquery': False,
+            'load_editor': False}
+
+
+def file_download(request):
+    f = request.context.blob.open()
+    headers = (('Content-Type', request.context.mimetype),
+               ('Content-Length', str(request.context.size)))
+    return Response(headerlist=headers, app_iter=f)

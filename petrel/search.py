@@ -66,11 +66,7 @@ class CatalogAware:
 
     def _get_catalog_metadata(self):
         """Return metadata of this object that is going to be kept."""
-        ## 'label' is only used for accessibility purpose when
-        ## displaying the icon (as 'alt').
         return dict(title=self.title,
-                    icon=self.icon,
-                    label=self.label,
                     path=resource_path(self))
 
     def index(self):
