@@ -36,9 +36,8 @@
     });
   </script>
 
-  <!-- FIXME: conditionally load this file. It's needed only for folder listing  (for now?). Think about renaming it. -->
   <script type="text/javascript"
-          tal:attributes="src api.static_url('petrel:static/js/utils.js')"></script>
+          src="${api.static_url('petrel:static/js/admin.js')}"></script>
   <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->
 </head>
 <body>
