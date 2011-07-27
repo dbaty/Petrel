@@ -19,8 +19,7 @@ def login_form(request, error=None):
     return {'api': api,
             'login': login,
             'next': next,
-            'error': error,
-            'load_editor': False}
+            'error': error}
 
 
 def login(request):

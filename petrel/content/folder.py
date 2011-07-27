@@ -7,14 +7,13 @@ from repoze.folder import unicodify
 from repoze.folder.events import ObjectAddedEvent
 from repoze.folder.events import ObjectWillBeRemovedEvent
 
-from wtforms.fields import TextAreaField
-
 from zope.interface import implements
 
 from petrel.content.base import BaseContent
 from petrel.content.registry import get_content_type_registry
 from petrel.forms import BaseContentAddForm
 from petrel.forms import BaseContentEditForm
+from petrel.forms import HtmlField
 from petrel.interfaces import IFolderish
 from petrel.views.utils import get_template_api
 
@@ -23,7 +22,7 @@ ALLOWED_NAME = re.compile('^[a-zA-Z0-9]+[\w.-]*$')
 
 
 class FolderAddForm(BaseContentAddForm, ):
-    body = TextAreaField(label=u'Body')
+    body = HtmlField(label=u'Body')
 
 
 class FolderEditForm(BaseContentEditForm, FolderAddForm):
@@ -98,9 +97,7 @@ class Folder(BaseFolder, BaseContent):
 
 def folder_contents(request):
     return {'api': get_template_api(request),
-            'items': request.context.values(),
-            'load_jquery': False,
-            'load_editor': False}
+            'items': request.context.values()}
 
 
 def folder_delete(request):
@@ -128,9 +125,7 @@ def folder_rename_form(request):
               'title': folder[name].title} \
                  for name in names]
     return {'api': get_template_api(request),
-            'items': items,
-            'load_jquery': False,
-            'load_editor': False}
+            'items': items}
 
 
 def folder_rename(request):

@@ -26,6 +26,15 @@
     <tal:widget tal:replace="structure field()"/>
   </div>
 
+  <tal:if tal:condition="form.has_html_field()">
+    <script type="text/javascript"
+            src="${api.static_url('petrel:static/js/tiny_mce/tiny_mce.js')}">
+    </script>
+    <script type="text/javascript">
+      initHtmlEditor();
+    </script>
+  </tal:if>
+
   <div class="buttons">
     <button type="submit">
       <img tal:attributes="src api.static_url('petrel:static/img/tick.png')" alt=""/>

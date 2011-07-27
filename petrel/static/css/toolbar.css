@@ -54,11 +54,9 @@
 #petrel-toolbar-actions li {
     display: inline-block;
     border: 1px solid #666666;
-}
-
-#petrel-toolbar-actions li {
     padding: 0.5em;
     margin-right: 1em;
+    background-color: #6A6A6A;
 }
 
 #petrel-toolbar-actions .dropdown-controller:after {
@@ -71,9 +69,6 @@
 
 #petrel-toolbar-actions .dropdown-controller:after {
     content: '\0025be';
-    margin-left: 0.5em;
-    margin-right: 0.2em;
-    border-left: 1px dashed #666666;
 }
 
 .fg-menu-container {

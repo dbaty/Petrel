@@ -1,6 +1,9 @@
 from wtforms.fields import TextField
+from wtforms.fields import TextAreaField
 from wtforms.form import Form
 from wtforms.validators import required
+
+from wtforms.widgets import TextArea
 
 
 class BaseForm(Form):
@@ -17,6 +20,13 @@ class BaseForm(Form):
                 self.id.errors.append(
                     u'An item with the same id already exists.')
         return success
+
+    def has_html_field(self):
+        """Return whether the form has any HTML field."""
+        for field in self:
+            if isinstance(field, HtmlField):
+                return True
+        return False
 
 
 class BaseContentAddForm(BaseForm):
@@ -41,3 +51,13 @@ class BaseContentEditForm:
     form (which includes ``id``) and this mix-in (which does not).
     """
     id = None
+
+
+class HtmlWidget(TextArea):
+    def __call__(self, field, **kwargs):
+        kwargs['class'] = 'html'
+        return TextArea.__call__(self, field, **kwargs)
+
+
+class HtmlField(TextAreaField):
+    widget = HtmlWidget()

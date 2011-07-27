@@ -1,12 +1,11 @@
-from wtforms.fields import TextAreaField
-
 from petrel.content.base import BaseContent
 from petrel.forms import BaseContentAddForm
 from petrel.forms import BaseContentEditForm
+from petrel.forms import HtmlField
 
 
 class DocumentAddForm(BaseContentAddForm):
-    body = TextAreaField(label=u'Body')
+    body = HtmlField(label=u'Body')
 
 
 class DocumentEditForm(BaseContentEditForm, DocumentAddForm):

@@ -93,9 +93,7 @@ def file_info(request):
     api = get_template_api(request)
     return {'api': api,
             'context': request.context,
-            'size': pretty_size(request.context.size),
-            'load_jquery': False,
-            'load_editor': False}
+            'size': pretty_size(request.context.size)}
 
 
 def file_download(request):

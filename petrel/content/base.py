@@ -83,8 +83,6 @@ def content_add_form(content_type, request, form=None):
         form = content_type._get_add_form()
     label = content_type.label
     return {'api': get_template_api(request),
-            'load_jquery': True,
-            'load_editor': True,
             'content_type': label,
             'add_mode': True,
             'form': form}
@@ -116,8 +114,6 @@ def content_edit_form(request, form=None):
         form = context._get_edit_form()
     label = content_type.label
     return {'api': get_template_api(request),
-            'load_jquery': True,
-            'load_editor': True,
             'content_type': label,
             'add_mode': False,
             'form': form}

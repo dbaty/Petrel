@@ -35,21 +35,8 @@
       });
     });
   </script>
-  <tal:wysiwyg-editor tal:condition="load_editor">
-    <script type="text/javascript"
-            tal:attributes="src api.static_url('petrel:static/js/cleditor.min.js')">
-    </script>
-      <link rel="stylesheet" type="text/css"
-            tal:attributes="href api.static_url('petrel:static/css/cleditor.css')"/>
-    <script type="text/javascript">
-      $(document).ready(function() {
-        // FIXME: we could store the name of the HTML fields in 'load_editor'
-        $("#body").cleditor();
-      });
-    </script>
-  </tal:wysiwyg-editor>
 
-  <!-- FIXME: conditionally load this file. It's needed only for folder listing  (for now). Think about renaming it. -->
+  <!-- FIXME: conditionally load this file. It's needed only for folder listing  (for now?). Think about renaming it. -->
   <script type="text/javascript"
           tal:attributes="src api.static_url('petrel:static/js/utils.js')"></script>
   <metal:html-head metal:define-slot="html-head"/><!-- FIXME: needed? -->

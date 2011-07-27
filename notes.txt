@@ -4,7 +4,7 @@ Todo
 - add a tab to enter metadata in the edit form: creator, keywords,
   language, template, etc.
 
-- switch from cleditor to TinyMCE
+- provide a custom file/image browser for TinyMCE
 
 - use 'name' or 'id', not both
 
@@ -19,6 +19,8 @@ Todo
 - implement site map;
 
 - update 'admin.css' and 'toolbar.css'
+
+- have a nicer login form
 
 - try another (more simple?) menu library for the toolbar
 
@@ -75,6 +77,8 @@ Todo
 - settle on using 'tal:xxx' or '${}' substition in templates.
 
 - inline editing
+
+- clean up 'static/js/tiny_mce': we probably do not need everything
 
 
 Credits
