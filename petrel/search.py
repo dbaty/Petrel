@@ -25,11 +25,11 @@ def get_catalog_document_map(obj):
 
 def create_catalog_tools(site):
     """Create catalog-related tools."""
-    setattr(site, CATALOG_ID, Catalog())
-    setattr(site, CATALOG_DOC_MAP_ID, DocumentMap())
-    catalog = getattr(site, CATALOG_ID)
+    catalog = Catalog()
     catalog['path'] = CatalogPathIndex2(_get_path)
     catalog['searchable_text'] = CatalogTextIndex(_get_searchable_text)
+    setattr(site, CATALOG_ID, catalog)
+    setattr(site, CATALOG_DOC_MAP_ID, DocumentMap())
 
 
 def _get_path(obj, _unused_default=None):

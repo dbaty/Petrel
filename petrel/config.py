@@ -5,19 +5,24 @@ from pyramid_beaker import session_factory_from_settings
 from repoze.zodbconn.finder import PersistentApplicationFinder
 
 from petrel.content.registry import get_content_type_registry
-from petrel.content.site import Site
 from petrel.interfaces import IContentTypeRegistry
 from petrel.interfaces import IFolderish
 from petrel.interfaces import ITemplateAPI
 
 
+# FIXME: do we need to include import statements in the functions or
+# could they be moved at module scope?
+
+SITE_ID = 'site'
+
 def app_maker(zodb_root):
-    if not 'app_root' in zodb_root:
-        app_root = Site()
-        zodb_root['app_root'] = app_root
+    if SITE_ID not in zodb_root:
+        from petrel.content.site import Site
+        site = Site()
+        zodb_root[SITE_ID] = site
         import transaction
         transaction.commit()
-    return zodb_root['app_root']
+    return zodb_root[SITE_ID]
 
 
 def _register_template_api(config, factory):
@@ -111,14 +116,15 @@ def _customize_content_type(config, klass, **kwargs):
 
 ## FIXME: the name of the method does not sound right.
 ## FIXME: arguments do not sound right either...
-def get_default_config(base_config=None, **settings):
+def get_default_config(global_config, base_config=None, **settings):
     """Provide a default configuration for a Petrel-based
     application.
     """
     if base_config is not None:
         config = base_config
     else:
-        zodb_uri = settings.get('zodb_uri')
+        zodb_uri = settings.get('zodb_uri', None) or \
+            global_config.get('zodb_uri', None)
         if not zodb_uri:
             raise ValueError("No 'zodb_uri' in application configuration.")
         finder = PersistentApplicationFinder(zodb_uri, app_maker)
@@ -186,5 +192,21 @@ def get_default_config(base_config=None, **settings):
     config.add_subscriber(index, IObjectAddedEvent)
     config.add_subscriber(reindex, IObjectModifiedEvent)
     config.add_subscriber(unindex, IObjectWillBeRemovedEvent)
+
+    ## Enable authorization system and related views
+    from petrel.auth import setup_who_api_factory
+    from petrel.views.auth import login
+    from petrel.views.auth import login_form
+    from petrel.views.auth import logout
+    setup_who_api_factory(global_config, settings['auth_config_file'])
+    config.add_view(name='login',
+                    renderer='petrel:templates/login.pt',
+                    view=login_form)
+    config.add_view(name='login',
+                    request_method='POST',
+                    renderer='petrel:templates/login.pt',
+                    view=login)
+    config.add_view(name='logout',
+                    view=logout)
 
     return config

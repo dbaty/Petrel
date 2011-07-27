@@ -1,32 +1,37 @@
-* {
+#petrel-toolbar * {
     margin: 0;
     padding: 0;
 }
 
-body {
+#petrel-toolbar {
     font-family: "Lucida Grande", arial, sans-serif;
-    background-color: transparent;
+    background-color: #333333;
+    color: white;
+    font-size: 14px;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #999999;
 }
 
-a {
+#petrel-toolbar a,
+.fg-menu-container a {
     text-decoration: none;
+    border: 0;
+    color: white;
+}
+
+#petrel-toolbar a:hover,
+.dropdown a:hover {
     border: 0;
 }
 
-#petrel-toolbar {
-    width: 100%;
-    background-color: #333333;
-    color: white;
-    font-size: 16px;
-}
-
-#petrel-toolbar a {
-    color: white;
+#petrel-toolbar-login-bar {
+    float: right;
 }
 
 #petrel-toolbar-breadcrumbs {
     list-style-type: none;
-    margin: 0 0 1em 1em;
+    margin-bottom: 1em;
 }
 
 #petrel-toolbar-breadcrumbs li {
@@ -42,29 +47,60 @@ a {
     content: '';
 }
 
-#petrel-toolbar-breadcrumbs li a {
-}
-
-#petrel-toolbar-breadcrumbs li a:hover {
-    text-decoration: underline;
-}
-
 #petrel-toolbar-breadcrumbs {
     list-style-type: none;
-    margin: 0 0 1em 1em;
-}
-
-#petrel-toolbar-actions {
-    margin-left: 1em;
 }
 
 #petrel-toolbar-actions li {
-    display: inline;
+    display: inline-block;
+    border: 1px solid #666666;
 }
 
-#petrel-toolbar-actions .dropdown,
-#petrel-toolbar-actions .dropdown dt,
-#petrel-toolbar-actions .dropdown dd,
-#petrel-toolbar-actions .dropdown ul {
-    display: inline;
+#petrel-toolbar-actions li {
+    padding: 0.5em;
+    margin-right: 1em;
 }
+
+#petrel-toolbar-actions .dropdown-controller:after {
+    padding: 0.5em 0 0.5em 0.5em;
+}
+
+#petrel-toolbar-actions li:first-child {
+    border-left: 1px solid #666666;
+}
+
+#petrel-toolbar-actions .dropdown-controller:after {
+    content: '\0025be';
+    margin-left: 0.5em;
+    margin-right: 0.2em;
+    border-left: 1px dashed #666666;
+}
+
+.fg-menu-container {
+    list-style-type: none;
+    background-color: #333333;
+    border: 1px solid #666666;
+}
+
+.dropdown li {
+    border-bottom: 1px solid #666666;
+    padding: 0.3em;
+}
+
+.dropdown li:last-child {
+    border-bottom: 0;
+}
+
+#petrel-toolbar-actions .dropdown {
+    display: none;
+}
+
+
+/* FG menu by Filament Group */
+.fg-menu-container { position: absolute; top:0; left:-999px; overflow: hidden; }
+.fg-menu { position:relative; }
+.fg-menu ul { position:absolute; top:0; }
+.fg-menu.fg-menu-scroll,
+.fg-menu ul.fg-menu-scroll { overflow: scroll;  overflow-x: hidden; }
+.fg-menu li { clear:both; float:left; width:100%; }	
+.fg-menu li li { font-size:1em; } /* inner li font size must be reset so that they don't blow up */

@@ -13,8 +13,10 @@ class Site(Folder):
     __parent__ = __name__ = None
 
     def __init__(self):
+        from petrel.auth import create_user_db # FIXME: not nice but ok
         Folder.__init__(self)
         create_catalog_tools(self)
+        create_user_db(self)
         self.title = u'Site'
         self.description = u'A site.'
-        self.index() # for 'utils.get_nav_tree()' to work properly ## FIXME: really?
+#        self.index() # for 'utils.get_nav_tree()' to work properly ## FIXME: really?

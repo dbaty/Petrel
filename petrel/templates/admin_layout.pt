@@ -13,8 +13,27 @@
         href="${api.static_url('petrel:static/css/admin.css')}"/>
   <link rel="stylesheet" type="text/css" href="${api.static_url('petrel:static/css/toolbar.css')}">
   <script type="text/javascript"
-          tal:condition="python: load_editor or load_jquery"
           tal:attributes="src api.static_url('petrel:static/js/jquery.min.js')">
+  </script>
+  <script type="text/javascript" src="${api.static_url('petrel:static/js/fg.menu.js')}"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.dropdown-controller').each(function(index) {
+        $(this).menu({
+          content: '<ul class="dropdown"' + $(this).next().html() + '<\/ul>',
+		positionOpts: {
+			posX: 'left', 
+			posY: 'bottom',
+			offsetX: -8, // FIXME: magic value!
+			offsetY: 7, // FIXME: magic value!
+			directionH: 'right',
+			directionV: 'down', 
+			detectH: true, // do horizontal collision detection  
+			detectV: true, // do vertical collision detection
+			linkToFront: false},
+          showSpeed: 50});
+      });
+    });
   </script>
   <tal:wysiwyg-editor tal:condition="load_editor">
     <script type="text/javascript"
@@ -24,11 +43,12 @@
             tal:attributes="href api.static_url('petrel:static/css/cleditor.css')"/>
     <script type="text/javascript">
       $(document).ready(function() {
-         // FIXME: we could store the name of the HTML fields in 'load_editor'
+        // FIXME: we could store the name of the HTML fields in 'load_editor'
         $("#body").cleditor();
       });
     </script>
   </tal:wysiwyg-editor>
+
   <!-- FIXME: conditionally load this file. It's needed only for folder listing  (for now). Think about renaming it. -->
   <script type="text/javascript"
           tal:attributes="src api.static_url('petrel:static/js/utils.js')"></script>
@@ -36,9 +56,11 @@
 </head>
 <body>
 
-  <div metal:use-macro="api.admin_toolbar"></div>
+  <div tal:condition="api.logged_in"
+       metal:use-macro="api.admin_toolbar"></div>
 
-  <ol id="navtree"
+  <ol tal:condition="api.logged_in"
+      id="navtree"
       tal:content="structure api.get_nav_tree()">
   </ol>
 
@@ -46,7 +68,8 @@
     <metal:content metal:define-slot="content"/>
   </div>
 
-  <ol id="footer">
+  <ol tal:condition="api.logged_in"
+      id="footer">
     <li>
       <a href="FIXME">search form</a>
     </li>

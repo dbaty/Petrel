@@ -12,6 +12,8 @@ requires = [
     'repoze.catalog',
     'repoze.folder',
     'repoze.tm',
+    'repoze.who',
+    'repoze.whoplugins.zodb',
     'repoze.zodbconn',
     'wtforms',
     'ZODB3',

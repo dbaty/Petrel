@@ -6,10 +6,16 @@
   <title></title>
   <base target="_parent"/>
 </head>
-<body>
+<body style="margin: 0; padding: 0">
 <div metal:define-macro="toolbar"
-    id="petrel-toolbar"
+     id="petrel-toolbar"
      tal:define="breadcrumbs api.get_breadcrumbs()">
+
+  <div id="petrel-toolbar-login-bar">
+    <span tal:replace="api.login"/>
+    &middot;
+    <a href="logout">log out</a>
+  </div>
 
   <ol id="petrel-toolbar-breadcrumbs">
     <li tal:repeat="item breadcrumbs[:-1]">
@@ -21,36 +27,36 @@
   </ol>
 
   <ol id="petrel-toolbar-actions">
-    <li class="button"><a href="edit">edit</a></li>
-    <li class="button">
-      <a class="dropdown-controller" href="#FIXME">change status</a>
+    <li class="button"><a href="edit">edit</a></li
+    ><li class="button">
+      <a class="dropdown-controller" href="#">change status</a>
       <ul class="dropdown">
         <li><a href="publish">publish</a></li>
       </ul>
-    </li>
-    <li class="button">
-      <a class="dropdown-controller" href="#FIXME">actions</a>
+    </li
+    ><li class="button">
+      <a class="dropdown-controller" href="#">actions</a>
       <ul class="dropdown">
         <li><a href="#FIXME">copy</a></li>
         <li><a href="#FIXME">cut</a></li>
         <li><a href="#FIXME">paste</a></li>
         <li><a href="#FIXME">delete</a></li>
       </ul>
-    </li>
-    <li class="button">
-      <a class="dropdown-controller" href="#FIXME">translate into</a>
+    </li
+    ><li class="button">
+      <a class="dropdown-controller" href="#">translate into</a>
       <ul class="dropdown">
         <li><a href="publish">English</a></li>
       </ul>
-    </li>
-    <li tal:condition="api.context.is_folderish"
+    </li
+    ><li tal:condition="api.context.is_folderish"
         class="button">
       <a href="contents">contents</a>
-    </li>
-    <li class="button"
+    </li
+    ><li class="button"
         tal:define="addable_types api.context.get_addable_types(request)"
         tal:condition="addable_types">
-      <a class="dropdown-controller" href="#FIXME">add item</a>
+      <a class="dropdown-controller" href="#">add item</a>
       <ul class="dropdown">
         <li tal:repeat="addable_type addable_types">
           <a href="${addable_type['form']}"
@@ -75,6 +81,17 @@
   window.parent.document.getElementById('petrel-toolbar').style.height = height;
   window.parent.document.body.style.marginTop = height;
 </script>
+  <script type="text/javascript" src="${api.static_url('petrel:static/js/fg.menu.js')}"></script>
+  <script type="text/javascript">
+    // FIXME: code is duplicated (see 'admin_layout.pt')
+    $(document).ready(function() {
+      $('.dropdown-controller').each(function(index) {
+        $(this).menu({
+          content: $(this).next().html(),
+          showSpeed: 50});
+      });
+    });
+  </script>
 
 </body>
 </html>

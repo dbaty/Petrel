@@ -1,9 +1,9 @@
 from zope.interface import implements
 
-from pyramid.decorator import reify
 from pyramid.renderers import get_renderer
 from pyramid.traversal import find_root
 
+from petrel.auth import get_user_metadata
 from petrel.interfaces import ITemplateAPI
 
 
@@ -26,6 +26,7 @@ class TemplateAPI(object):
         self.admin_toolbar = get_renderer(
             'petrel:templates/toolbar.pt').implementation().macros['toolbar']
         self.context_url = request.resource_url(request.context)
+        self.user_md = get_user_metadata(self.request)
 
     @property
     def success_messages(self):
@@ -41,9 +42,13 @@ class TemplateAPI(object):
     def static_url(self, path):
         return self.request.static_url(path)
 
-    @reify ## FIXME: really?
+    @property
     def logged_in(self):
-        return True ## FIXME
+        return self.user_md != {}
+
+    @property
+    def login(self):
+        return self.user_md.get('repoze.who.userid', None)
 
     @property
     def toolbar_js(self): ## FIXME: rename

@@ -1,11 +1,18 @@
 Todo
 ====
 
-- add 'file' and 'image' content types
+- add a tab to enter metadata in the edit form: creator, keywords,
+  language, template, etc.
 
 - switch from cleditor to TinyMCE
 
 - use 'name' or 'id', not both
+
+- should we really include a field for the id/name in the edit form?
+
+- perhaps we should move the standard views from the content type
+  modules ('content/*.py') to other modules ('views/*.py'). That would
+  probably help with circular import.
 
 - implement navigation tree;
 
@@ -13,20 +20,20 @@ Todo
 
 - update 'admin.css' and 'toolbar.css'
 
+- try another (more simple?) menu library for the toolbar
+
 - enhance success/error message (using
   http://plugins.jquery.com/project/jquery-toastmessage-plugin)
 
-- use a prefix to avoid clashes between views and resources (for
-  example, '@edit' instead of 'edit')
+- use a prefix to avoid clashes between views and resources. In fact,
+  this is already implemented in Pyramid. We just have to use
+  '@@<view_name>' in HTML links
 
 - order items in folder (see recent changes in repoze.folder)
 
 - use the catalog to list items in the folder view page (?)
 
 - add automatic creation and modification date attributes on items
-
-- add a tab to enter metadata in the edit form: keywords, author,
-  language, etc.
 
 - make the 'cancel' button in forms go back to the referrer page (at
   least when we come from the 'contents' view)
@@ -38,14 +45,22 @@ Todo
   and adding a new one under any meta_type, instead of registering
   under the same meta_type to overwrite the existing one
 
+- 'label' is not the best name. Why not 'type_label'?
+
 - protection against CSRF
 
 - implement an error page for 404 errors (?)
+
+- index contents of files
 
 - authentication & authorization
 
 - it should be easy to override assets in applications that use Petrel
   with 'Configurator.override_asset()'
+
+- check that unused blob files (that correspond with File object that
+  have been edited or removed) are correctly removed when the database
+  is packed
 
 - add more unit/integration tests
 
@@ -67,6 +82,8 @@ Credits
 
 Breadcrumbs: Veerle Pieters (http://veerle-v2.duoh.com/blog/about/)
 
-Icons of content types: Plone
+Icons of content types: Famfamfam
 
 "Tick" image: FIXME
+
+Dropdown menu: http://www.filamentgroup.com/lab/jquery_ipod_style_and_flyout_menus/

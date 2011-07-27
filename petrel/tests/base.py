@@ -13,7 +13,7 @@ def setUp():
     tests.
     """
     config = testing.setUp()
-    get_default_config(config)
+    get_default_config({}, config)
     config.register_template_api(TemplateAPI)
     return config
 
