@@ -1,3 +1,5 @@
+import os
+
 from pyramid import testing
 from pyramid.url import resource_url
 
@@ -8,12 +10,21 @@ from petrel.config import get_default_config
 from petrel.views.utils import TemplateAPI
 
 
+def get_fixture_path(filename):
+    """Return the full path to the given ``filename`` in the fixtures
+    directory.
+    """
+    return os.path.join(os.path.dirname(__file__), 'fixtures', filename)
+    
+
 def setUp():
     """Set Pyramid registry and default Petrel configuration for our
     tests.
     """
     config = testing.setUp()
-    get_default_config({}, config)
+    global_config = {'here': 'dummy'}
+    settings = {'auth_config_file': get_fixture_path('auth.ini')}
+    get_default_config(global_config, config, **settings)
     config.register_template_api(TemplateAPI)
     return config
 
@@ -35,6 +46,3 @@ class DummyRequest(testing.DummyRequest):
         if get or post:
             ## That's what 'webob.Request.str_params()' does
             self.params = NestedMultiDict(self.GET, self.POST)
-
-    def resource_url(self, resource, *elements, **kw):
-        return resource_url(resource, self, *elements, **kw)

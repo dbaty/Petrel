@@ -1,18 +1,42 @@
 Todo
 ====
 
-- add a tab to enter metadata in the edit form: creator, keywords,
-  language, template, etc.
+- modernize (port to Pyramid 1.3): asset overriding, 'includeme'
+  pattern, pyramid_tm instead of repoze.tm, etc.
 
-- provide a custom file/image browser for TinyMCE
+- PEP8 comments
+
+- add a tab to enter metadata in the edit form: creator, keywords,
+  language, date (publication date?), copyright, hide in nav/site map,
+  template, etc.
+
+- authentication & authorization :
+
+  - permissions : view, add, edit, manage site
+
+  - roles : manager, editor
 
 - use 'name' or 'id', not both
 
+- 'file' field of the File and Image content types should be required
+  (cf. http://groups.google.com/group/wtforms/browse_thread/thread/b078e5702d50849d)
+
+- make a custom edit form for the File and Image content types
+
 - should we really include a field for the id/name in the edit form?
+
+- provide a custom file/image browser for TinyMCE
+
+- provide an interface for IFolderish where the user can upload files
+  by drag and drop'ing them
 
 - perhaps we should move the standard views from the content type
   modules ('content/*.py') to other modules ('views/*.py'). That would
   probably help with circular import.
+
+- add another content type: HtmlPage (FSHtmlPage) that does not use
+  the standard layout and store the full HTML of the page in ZODB
+  (or file system). That could be useful for custom home pages.
 
 - implement navigation tree;
 
@@ -54,8 +78,6 @@ Todo
 - implement an error page for 404 errors (?)
 
 - index contents of files
-
-- authentication & authorization
 
 - it should be easy to override assets in applications that use Petrel
   with 'Configurator.override_asset()'

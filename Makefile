@@ -19,7 +19,7 @@ clean:
 
 .PHONY: coverage
 coverage:
-	PYTHONWARNINGS=all coverage run setup.py nosetests
+	coverage run setup.py test -q
 	coverage html -d "$(tmp_cov_dir)"
 	open "$(tmp_cov_dir)/index.html"
 	@echo "Coverage information is available at '$(tmp_cov_dir)'."

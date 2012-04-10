@@ -34,7 +34,7 @@ class TestCatalog(TestCase):
         return folder
 
     def _do_search(self, **criteria):
-        return self.site['_catalog'].search(**criteria)
+        return self.site._catalog.search(**criteria)
 
     def test_get_catalog(self):
         from repoze.catalog.catalog import Catalog
